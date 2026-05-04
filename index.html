@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPSITKNM — Výučbové Materiály</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg:        #030712;
+      --surface:   rgba(15,23,42,0.65);
+      --surface2:  rgba(30,41,59,0.5);
+      --border:    rgba(99,102,241,0.18);
+      --bactive:   rgba(99,102,241,0.55);
+      --indigo:    #6366f1;
+      --cyan:      #06b6d4;
+      --emerald:   #10b981;
+      --violet:    #8b5cf6;
+      --text:      #f1f5f9;
+      --muted:     #94a3b8;
+      --faint:     #475569;
+      --mono:      'Fira Code', monospace;
+      --sans:      'Inter', system-ui, sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      overflow-x: hidden;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--indigo); border-radius: 3px; }
+
+    /* ─── ANIMATED BACKGROUND ─── */
+    .bg-wrap {
+      position: fixed; inset: 0; z-index: 0; overflow: hidden;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%, rgba(99,102,241,0.12), transparent);
+    }
+
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(130px); opacity: 0.3;
+    }
+    .orb1 { width:700px; height:700px; background:radial-gradient(circle,#4f46e5,transparent); top:-250px; left:-200px; animation: o1 28s ease-in-out infinite; }
+    .orb2 { width:500px; height:500px; background:radial-gradient(circle,#0891b2,transparent); top:15%; right:-180px; animation: o2 22s ease-in-out infinite; }
+    .orb3 { width:450px; height:450px; background:radial-gradient(circle,#7c3aed,transparent); bottom:-80px; left:28%; animation: o3 35s ease-in-out infinite; }
+    .orb4 { width:300px; height:300px; background:radial-gradient(circle,#059669,transparent); top:55%; left:-80px; animation: o1 18s ease-in-out infinite reverse; }
+
+    @keyframes o1 {
+      0%,100% { transform:translate(0,0) scale(1); }
+      33%      { transform:translate(80px,-100px) scale(1.15); }
+      66%      { transform:translate(-60px,70px) scale(0.9); }
+    }
+    @keyframes o2 {
+      0%,100% { transform:translate(0,0) scale(1); }
+      50%      { transform:translate(-80px,60px) scale(1.1); }
+    }
+    @keyframes o3 {
+      0%,100% { transform:translate(0,0) scale(1); }
+      25%      { transform:translate(100px,-50px) scale(1.08); }
+      75%      { transform:translate(-70px,80px) scale(0.92); }
+    }
+
+    .grid-lines {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(99,102,241,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99,102,241,0.035) 1px, transparent 1px);
+      background-size: 60px 60px;
+    }
+
+    /* noise overlay */
+    .noise {
+      position: absolute; inset: 0; opacity: 0.025;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-size: 200px;
+    }
+
+    /* ─── CANVAS ─── */
+    #ptx { position:fixed; inset:0; z-index:1; pointer-events:none; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top:0; left:0; right:0; z-index:200;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2.5rem;
+      background: rgba(3,7,18,0.75);
+      backdrop-filter: blur(24px) saturate(180%);
+      border-bottom: 1px solid rgba(99,102,241,0.1);
+    }
+
+    .nav-logo {
+      font-family: var(--mono); font-size: 0.85rem; font-weight:500;
+      color: var(--text); text-decoration:none;
+      display:flex; align-items:center; gap:0.4rem;
+    }
+    .nav-prompt { color: var(--emerald); }
+    .nav-cur {
+      width:7px; height:14px;
+      background: var(--indigo);
+      display:inline-block; vertical-align:middle;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
+    .nav-links { display:flex; gap:2rem; list-style:none; }
+    .nav-links a {
+      font-size:0.85rem; font-weight:500;
+      color:var(--muted); text-decoration:none;
+      transition: color 0.2s;
+      position: relative;
+    }
+    .nav-links a::after {
+      content:''; position:absolute; bottom:-4px; left:0; right:0; height:1px;
+      background:var(--indigo); transform:scaleX(0); transition:transform 0.2s;
+    }
+    .nav-links a:hover { color:var(--text); }
+    .nav-links a:hover::after { transform:scaleX(1); }
+
+    .nav-cta { display:flex; gap:0.75rem; }
+
+    .btn {
+      padding:0.45rem 1.1rem; border-radius:8px;
+      font-size:0.82rem; font-weight:600;
+      text-decoration:none; cursor:pointer; border:none;
+      display:inline-flex; align-items:center; gap:0.4rem;
+      transition: all 0.2s cubic-bezier(.4,0,.2,1);
+    }
+    .btn-ghost {
+      background:transparent;
+      border:1px solid var(--border); color:var(--muted);
+    }
+    .btn-ghost:hover { border-color:var(--bactive); color:var(--text); background:rgba(99,102,241,0.08); }
+    .btn-solid {
+      background:var(--indigo); color:#fff;
+      box-shadow: 0 0 24px rgba(99,102,241,0.4);
+    }
+    .btn-solid:hover {
+      background:#4f46e5;
+      box-shadow: 0 0 40px rgba(99,102,241,0.65);
+      transform: translateY(-2px);
+    }
+
+    /* ─── MAIN ─── */
+    main { position:relative; z-index:10; }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:center;
+      text-align:center;
+      padding: 80px 2rem 6rem;
+      gap: 1.75rem;
+      position: relative;
+    }
+
+    .hero-pill {
+      display:inline-flex; align-items:center; gap:0.5rem;
+      padding:0.35rem 1rem;
+      background:rgba(99,102,241,0.1);
+      border:1px solid rgba(99,102,241,0.25);
+      border-radius:100px;
+      font-family:var(--mono); font-size:0.72rem;
+      color:var(--indigo); letter-spacing:0.06em;
+      animation: fadeUp 0.5s ease both;
+    }
+    .pill-dot {
+      width:6px; height:6px; border-radius:50%;
+      background:var(--emerald);
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow:0 0 0 0 rgba(16,185,129,0.6); }
+      50% { box-shadow:0 0 0 5px rgba(16,185,129,0); }
+    }
+
+    .hero-h1 {
+      font-size: clamp(3.2rem,9vw,7.5rem);
+      font-weight:900; line-height:1.0;
+      letter-spacing:-0.035em;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+
+    .grad {
+      background: linear-gradient(135deg, #818cf8 0%, #06b6d4 45%, #10b981 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+
+    /* glitch effect */
+    .glitch {
+      position:relative; display:inline-block;
+    }
+    .glitch::before, .glitch::after {
+      content: attr(data-text);
+      position:absolute; top:0; left:0; width:100%; height:100%;
+      background: linear-gradient(135deg, #818cf8 0%, #06b6d4 45%, #10b981 100%);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text;
+    }
+    .glitch::before {
+      left:2px; top:-1px;
+      background: linear-gradient(135deg, #f472b6, #06b6d4, #a78bfa);
+      -webkit-background-clip:text; background-clip:text;
+      animation: glitch1 4s infinite;
+      clip-path: polygon(0 20%, 100% 20%, 100% 40%, 0 40%);
+    }
+    .glitch::after {
+      left:-2px; top:1px;
+      background: linear-gradient(135deg, #34d399, #818cf8);
+      -webkit-background-clip:text; background-clip:text;
+      animation: glitch2 4s infinite;
+      clip-path: polygon(0 60%, 100% 60%, 100% 80%, 0 80%);
+    }
+    @keyframes glitch1 {
+      0%,90%,100% { opacity:0; transform:translate(0); }
+      92%          { opacity:1; transform:translate(-3px,1px) skewX(-2deg); }
+      94%          { opacity:1; transform:translate(3px,-1px) skewX(2deg); }
+      96%          { opacity:0; }
+    }
+    @keyframes glitch2 {
+      0%,88%,100% { opacity:0; transform:translate(0); }
+      90%          { opacity:1; transform:translate(3px,1px); }
+      93%          { opacity:1; transform:translate(-3px,-1px); }
+      95%          { opacity:0; }
+    }
+
+    .hero-sub {
+      font-size:1.2rem; color:var(--muted); max-width:580px;
+      line-height:1.75;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+    .hero-sub strong { color:var(--text); }
+
+    .typewriter-row {
+      font-family:var(--mono); font-size:1rem; color:var(--cyan);
+      animation: fadeUp 0.5s 0.3s ease both;
+      min-height:1.6em;
+    }
+    .tw-prefix { color:var(--emerald); }
+    .tw-cursor {
+      display:inline-block; width:2px; height:1.1em;
+      background:var(--cyan); margin-left:2px;
+      vertical-align:text-bottom;
+      animation:blink 0.75s step-end infinite;
+    }
+
+    .hero-btns {
+      display:flex; gap:1rem; flex-wrap:wrap; justify-content:center;
+      animation: fadeUp 0.5s 0.4s ease both;
+    }
+
+    .scroll-hint {
+      position:absolute; bottom:2.5rem; left:50%; transform:translateX(-50%);
+      display:flex; flex-direction:column; align-items:center; gap:0.4rem;
+      color:var(--faint); font-size:0.7rem; letter-spacing:0.1em;
+      animation: bounce-hint 2.5s ease-in-out infinite;
+    }
+    .scroll-hint .chevron {
+      width:16px; height:16px;
+      border-right:1.5px solid var(--faint); border-bottom:1.5px solid var(--faint);
+      transform:rotate(45deg);
+    }
+    @keyframes bounce-hint {
+      0%,100% { transform:translateX(-50%) translateY(0); }
+      50%      { transform:translateX(-50%) translateY(8px); }
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(24px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ─── DIVIDER ─── */
+    .divider {
+      height:1px; max-width:1200px; margin:0 auto;
+      background:linear-gradient(90deg,transparent,rgba(99,102,241,0.4),transparent);
+    }
+
+    /* ─── SECTIONS ─── */
+    .section {
+      max-width:1200px; margin:0 auto;
+      padding:7rem 2rem;
+    }
+
+    .sec-label {
+      font-family:var(--mono); font-size:0.72rem;
+      color:var(--cyan); letter-spacing:0.12em;
+      text-transform:uppercase; display:block;
+      margin-bottom:0.75rem;
+    }
+    .sec-title {
+      font-size:clamp(2rem,5vw,3.2rem);
+      font-weight:800; letter-spacing:-0.025em;
+      margin-bottom:0.75rem;
+    }
+    .sec-desc {
+      font-size:1.05rem; color:var(--muted);
+      max-width:520px; line-height:1.75;
+    }
+    .sec-head { margin-bottom:3.5rem; }
+    .sec-head.center { text-align:center; }
+    .sec-head.center .sec-desc { margin:0 auto; }
+
+    /* ─── TEACHER CARD ─── */
+    .teacher-card {
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:24px; padding:3rem;
+      backdrop-filter:blur(24px) saturate(140%);
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:3rem; align-items:center;
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .teacher-card:hover {
+      border-color:var(--bactive);
+      box-shadow:0 0 80px rgba(99,102,241,0.12);
+    }
+
+    .avatar {
+      width:110px; height:110px; border-radius:50%;
+      background:linear-gradient(135deg,#4f46e5,#06b6d4);
+      display:flex; align-items:center; justify-content:center;
+      font-size:2.4rem; font-weight:900; color:#fff;
+      flex-shrink:0; position:relative;
+    }
+    .avatar::after {
+      content:''; position:absolute; inset:-3px; border-radius:50%;
+      background:conic-gradient(from 0deg,#6366f1,#06b6d4,#10b981,#6366f1);
+      z-index:-1; opacity:0;
+      transition:opacity 0.3s;
+      animation:spin-g 3s linear infinite;
+    }
+    .teacher-card:hover .avatar::after { opacity:1; }
+    @keyframes spin-g { to { transform:rotate(360deg); } }
+
+    .t-name { font-size:1.9rem; font-weight:800; margin-bottom:0.3rem; }
+    .t-role {
+      font-family:var(--mono); font-size:0.8rem;
+      color:var(--indigo); margin-bottom:1rem;
+    }
+    .t-bio { color:var(--muted); line-height:1.75; margin-bottom:1.5rem; font-size:0.97rem; }
+
+    .chips { display:flex; gap:0.65rem; flex-wrap:wrap; }
+    .chip {
+      display:inline-flex; align-items:center; gap:0.35rem;
+      padding:0.35rem 0.85rem; border-radius:100px;
+      font-size:0.78rem; font-weight:600; text-decoration:none;
+      border:1px solid; transition:all 0.2s;
+    }
+    .chip:hover { transform:translateY(-2px); }
+    .chip-d { color:#7289da; border-color:rgba(114,137,218,0.3); background:rgba(114,137,218,0.08); }
+    .chip-d:hover { background:rgba(114,137,218,0.18); border-color:#7289da; }
+    .chip-y { color:#ff4444; border-color:rgba(255,68,68,0.3); background:rgba(255,68,68,0.08); }
+    .chip-y:hover { background:rgba(255,68,68,0.18); border-color:#ff4444; }
+    .chip-s { color:var(--emerald); border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.08); }
+    .chip-s:hover { background:rgba(16,185,129,0.18); border-color:var(--emerald); }
+
+    /* ─── STATS ─── */
+    .stats-row {
+      display:grid; grid-template-columns:repeat(4,1fr);
+      gap:1.25rem; padding:0 2rem;
+      max-width:1200px; margin:0 auto 0;
+    }
+    .stat {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:16px; padding:1.75rem 1.5rem;
+      text-align:center; backdrop-filter:blur(20px);
+      transition:all 0.25s;
+    }
+    .stat:hover { border-color:var(--bactive); transform:translateY(-3px); box-shadow:0 12px 40px rgba(0,0,0,0.3); }
+    .stat-num {
+      font-family:var(--mono); font-size:2.4rem; font-weight:800;
+      background:linear-gradient(135deg,var(--indigo),var(--cyan));
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+      background-clip:text; display:block;
+    }
+    .stat-label { font-size:0.82rem; color:var(--muted); margin-top:0.2rem; }
+
+    /* ─── SUBJECT CARDS ─── */
+    .subjects-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(480px,1fr));
+      gap:1.75rem;
+    }
+
+    .subj {
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:24px; padding:2.5rem;
+      backdrop-filter:blur(24px);
+      text-decoration:none; color:inherit; display:block;
+      position:relative; overflow:hidden;
+      transition:all 0.35s cubic-bezier(.4,0,.2,1);
+      transform-style:preserve-3d;
+    }
+    .subj::before {
+      content:''; position:absolute; inset:0; border-radius:24px; opacity:0;
+      transition:opacity 0.3s;
+    }
+    .subj-pro::before { background:radial-gradient(ellipse 120% 80% at 0% 0%,rgba(99,102,241,0.18),transparent 70%); }
+    .subj-sxg::before { background:radial-gradient(ellipse 120% 80% at 0% 0%,rgba(6,182,212,0.18),transparent 70%); }
+    .subj-oop::before { background:radial-gradient(ellipse 120% 80% at 0% 0%,rgba(139,92,246,0.18),transparent 70%); }
+
+    .subj:hover { transform:translateY(-6px); box-shadow:0 24px 60px rgba(0,0,0,0.45); }
+    .subj-pro:hover { border-color:rgba(99,102,241,0.55); }
+    .subj-sxg:hover { border-color:rgba(6,182,212,0.55); }
+    .subj-oop:hover { border-color:rgba(139,92,246,0.55); }
+    .subj:hover::before { opacity:1; }
+
+    .subj-icon {
+      width:52px; height:52px; border-radius:14px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.6rem; margin-bottom:1.5rem;
+    }
+    .icon-pro { background:rgba(99,102,241,0.15); }
+    .icon-sxg { background:rgba(6,182,212,0.15); }
+    .icon-oop { background:rgba(139,92,246,0.15); }
+
+    .subj-badge {
+      display:inline-block; font-family:var(--mono); font-size:0.68rem;
+      padding:0.18rem 0.6rem; border-radius:4px; margin-bottom:0.75rem;
+      letter-spacing:0.05em; font-weight:600;
+    }
+    .badge-pro { background:rgba(99,102,241,0.18); color:var(--indigo); }
+    .badge-sxg { background:rgba(6,182,212,0.18); color:var(--cyan); }
+    .badge-oop { background:rgba(139,92,246,0.18); color:var(--violet); }
+
+    .subj h3 { font-size:1.4rem; font-weight:700; margin-bottom:0.75rem; }
+    .subj-desc { color:var(--muted); line-height:1.7; font-size:0.92rem; margin-bottom:1.75rem; }
+
+    .topic-list { list-style:none; display:flex; flex-direction:column; gap:0.55rem; margin-bottom:2rem; }
+    .topic-list li {
+      display:flex; align-items:center; gap:0.6rem;
+      font-size:0.85rem; color:var(--muted);
+    }
+    .td { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+    .td-pro { background:var(--indigo); }
+    .td-sxg { background:var(--cyan); }
+    .td-oop { background:var(--violet); }
+
+    .subj-foot {
+      display:flex; align-items:center; justify-content:space-between;
+      padding-top:1.5rem; border-top:1px solid var(--border);
+    }
+    .subj-meta { font-family:var(--mono); font-size:0.72rem; color:var(--faint); }
+    .subj-go { font-size:0.85rem; font-weight:600; display:flex; align-items:center; gap:0.45rem; transition:gap 0.2s; }
+    .go-pro { color:var(--indigo); }
+    .go-sxg { color:var(--cyan); }
+    .go-oop { color:var(--violet); }
+    .subj:hover .subj-go { gap:0.8rem; }
+
+    /* ─── TERMINAL ─── */
+    .term {
+      background:#0d1117; border:1px solid rgba(99,102,241,0.2);
+      border-radius:16px; overflow:hidden;
+      font-family:var(--mono);
+      transition: border-color 0.3s, box-shadow 0.3s;
+    }
+    .term:hover {
+      border-color:rgba(99,102,241,0.4);
+      box-shadow:0 8px 40px rgba(0,0,0,0.5);
+    }
+    .term-bar {
+      padding:0.8rem 1.2rem;
+      background:rgba(99,102,241,0.07);
+      border-bottom:1px solid rgba(99,102,241,0.1);
+      display:flex; align-items:center; gap:0.45rem;
+    }
+    .tb { width:10px; height:10px; border-radius:50%; }
+    .tb-r { background:#ff5f57; } .tb-y { background:#febc2e; } .tb-g { background:#28c840; }
+    .term-name { font-size:0.72rem; color:var(--faint); margin-left:0.5rem; }
+    .term-body { padding:1.5rem; font-size:0.82rem; line-height:1.85; }
+
+    .tc  { color:#6a737d; }   /* comment  */
+    .tk  { color:#ff7b72; }   /* keyword  */
+    .ts  { color:#a5d6ff; }   /* string   */
+    .tcl { color:#ffa657; }   /* class    */
+    .tm  { color:#d2a8ff; }   /* method   */
+    .tv  { color:#f0f6fc; }   /* variable */
+    .tn  { color:#79c0ff; }   /* number   */
+    .tp  { color:var(--emerald); } /* prompt */
+    .to  { color:var(--muted); }  /* output  */
+
+    .code-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+
+    /* ─── REVEAL ─── */
+    .rv {
+      opacity:0; transform:translateY(32px);
+      transition:opacity 0.65s ease, transform 0.65s ease;
+    }
+    .rv.in { opacity:1; transform:translateY(0); }
+    .d1 { transition-delay:0.1s; }
+    .d2 { transition-delay:0.2s; }
+    .d3 { transition-delay:0.3s; }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top:1px solid rgba(99,102,241,0.1);
+      padding:2.5rem 2rem;
+      max-width:1200px; margin:0 auto;
+      display:flex; align-items:center; justify-content:space-between;
+      flex-wrap:wrap; gap:1rem;
+    }
+    .f-brand { font-family:var(--mono); font-size:0.82rem; color:var(--faint); }
+    .f-brand b { color:var(--indigo); }
+    .f-links { display:flex; gap:1.5rem; }
+    .f-links a {
+      font-size:0.82rem; color:var(--faint); text-decoration:none;
+      transition:color 0.2s;
+    }
+    .f-links a:hover { color:var(--text); }
+
+    /* ─── RESPONSIVE ─── */
+    @media(max-width:900px) {
+      .nav-links { display:none; }
+      nav { padding:0 1.25rem; }
+      .teacher-card { grid-template-columns:1fr; text-align:center; padding:2rem; gap:1.75rem; }
+      .avatar { margin:0 auto; }
+      .chips { justify-content:center; }
+      .subjects-grid { grid-template-columns:1fr; }
+      .code-grid { grid-template-columns:1fr; }
+      .stats-row { grid-template-columns:repeat(2,1fr); }
+      .section { padding:5rem 1.25rem; }
+    }
+    @media(max-width:480px) {
+      .hero-h1 { font-size:2.8rem; }
+      .stats-row { grid-template-columns:1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ BACKGROUND ═══ -->
+<div class="bg-wrap">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+  <div class="orb orb4"></div>
+  <div class="grid-lines"></div>
+  <div class="noise"></div>
+</div>
+
+<canvas id="ptx"></canvas>
+
+<!-- ═══ NAV ═══ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <span class="nav-prompt">~$</span>&nbsp;spsitknm<span class="nav-cur"></span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#o-mne">O mne</a></li>
+    <li><a href="#predmety">Predmety</a></li>
+    <li><a href="#preview">Obsah</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="https://discord.gg/eSQDsna4d7/" target="_blank" class="btn btn-ghost">⌘ Discord</a>
+    <a href="https://github.com/SPSITKNM" target="_blank" class="btn btn-solid">GitHub →</a>
+  </div>
+</nav>
+
+<!-- ═══ MAIN ═══ -->
+<main>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-pill">
+      <span class="pill-dot"></span>
+      SPSITKNM &nbsp;·&nbsp; Výučbové Materiály &nbsp;·&nbsp; 2024–2025
+    </div>
+
+    <h1 class="hero-h1">
+      Kód.<br>
+      <span class="grad glitch" data-text="Logika. Systémy.">Logika. Systémy.</span>
+    </h1>
+
+    <p class="hero-sub">
+      Materiály, skripty a projekty k predmetom <strong>PRO</strong> a <strong>SXG</strong>
+      na Strednej priemyselnej škole informačných a sieťových technológií.
+    </p>
+
+    <div class="typewriter-row">
+      <span class="tw-prefix">$ learn&nbsp;</span><span id="tw"></span><span class="tw-cursor"></span>
+    </div>
+
+    <div class="hero-btns">
+      <a href="#predmety" class="btn btn-solid">Zobraziť predmety ↓</a>
+      <a href="https://discord.gg/eSQDsna4d7/" target="_blank" class="btn btn-ghost">Pripojiť sa na Discord</a>
+    </div>
+
+    <div class="scroll-hint">
+      <span>scroll</span>
+      <div class="chevron"></div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- TEACHER -->
+  <div class="section" id="o-mne">
+    <div class="teacher-card rv">
+      <div class="avatar">TM</div>
+      <div>
+        <div class="t-name">Tomaš Mucha</div>
+        <div class="t-role">// Vyučujúci predmetov PRO &amp; SXG · 4. ročník</div>
+        <p class="t-bio">
+          Vitajte! Som vyučujúci predmetov programovania a SMART technológií.
+          Tu nájdete všetky skripty, zdrojové kódy, zadania a materiály z hodín — prehľadne na jednom mieste.
+          Pre aktuality sledujte Discord, pre praktické ukážky YouTube kanál.
+        </p>
+        <div class="chips">
+          <a href="https://discord.gg/eSQDsna4d7/" target="_blank" class="chip chip-d">⌘ Discord Server</a>
+          <a href="https://www.youtube.com/channel/UC0TOfJp6MtFlLSgfdhnlS9g" target="_blank" class="chip chip-y">▶ YouTube Kurz</a>
+          <a href="http://www.spsknm.sk/ssknm/" target="_blank" class="chip chip-s">◈ SPSITKNM</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat rv">
+      <span class="stat-num">3</span>
+      <div class="stat-label">Repozitáre</div>
+    </div>
+    <div class="stat rv d1">
+      <span class="stat-num">15+</span>
+      <div class="stat-label">Témy & Skripty</div>
+    </div>
+    <div class="stat rv d2">
+      <span class="stat-num">4.</span>
+      <div class="stat-label">Ročník</div>
+    </div>
+    <div class="stat rv d3">
+      <span class="stat-num">∞</span>
+      <div class="stat-label">Commitov nás čaká</div>
+    </div>
+  </div>
+
+  <div class="divider" style="margin-top:6rem;"></div>
+
+  <!-- SUBJECTS -->
+  <div class="section" id="predmety">
+    <div class="sec-head center">
+      <span class="sec-label">// predmety</span>
+      <h2 class="sec-title">Čo sa učíme?</h2>
+      <p class="sec-desc">Dva hlavné predmety, jeden cieľ — naučiť sa myslieť ako programátor a systémový inžinier.</p>
+    </div>
+
+    <div class="subjects-grid">
+
+      <!-- PRO -->
+      <a href="https://spsitknm.github.io/SPSITKNM" target="_blank" class="subj subj-pro rv tilt">
+        <div class="subj-icon icon-pro">⌨️</div>
+        <span class="subj-badge badge-pro">PRO — Programovanie</span>
+        <h3>Objektovo orientované programovanie</h3>
+        <p class="subj-desc">
+          Základy OOP, algoritmizácia a návrh programov v jazykoch C#, C++ a Python.
+          Od syntaxe a dátových typov po pokročilé koncepty ako Big O notácia a pamäťový model.
+        </p>
+        <ul class="topic-list">
+          <li><span class="td td-pro"></span>OOP paradigmatá, triedy a dedičnosť</li>
+          <li><span class="td td-pro"></span>Algoritmy & Big O notácia</li>
+          <li><span class="td td-pro"></span>C# a C++ implementácie</li>
+          <li><span class="td td-pro"></span>Dátové štruktúry & správa pamäte</li>
+          <li><span class="td td-pro"></span>Projekty, zadania & domáce úlohy</li>
+        </ul>
+        <div class="subj-foot">
+          <span class="subj-meta">15 súborov · aktívny</span>
+          <span class="subj-go go-pro">Otvoriť materiály →</span>
+        </div>
+      </a>
+
+      <!-- SXG -->
+      <a href="https://spsitknm.github.io/SXG" target="_blank" class="subj subj-sxg rv d1 tilt">
+        <div class="subj-icon icon-sxg">🖥️</div>
+        <span class="subj-badge badge-sxg">SXG — SMART Technológie</span>
+        <h3>Operačné systémy & Infraštruktúra</h3>
+        <p class="subj-desc">
+          Linux, virtualizácia, Docker, Git/GitLab, OpenTelemetry a sieťová infraštruktúra.
+          Praktické zručnosti pre modernú IT prevádzku a DevOps.
+        </p>
+        <ul class="topic-list">
+          <li><span class="td td-sxg"></span>Linux & príkazový riadok (Fedora)</li>
+          <li><span class="td td-sxg"></span>Git, GitHub, GitLab — verzionovanie</li>
+          <li><span class="td td-sxg"></span>Docker & kontajnerizácia</li>
+          <li><span class="td td-sxg"></span>KVM & virtualizácia</li>
+          <li><span class="td td-sxg"></span>OpenTelemetry & observabilita</li>
+        </ul>
+        <div class="subj-foot">
+          <span class="subj-meta">10 súborov · aktívny</span>
+          <span class="subj-go go-sxg">Otvoriť materiály →</span>
+        </div>
+      </a>
+
+      <!-- OOP Opakovanie -->
+      <a href="https://spsitknm.github.io/oop_opakovanie" target="_blank" class="subj subj-oop rv d2 tilt">
+        <div class="subj-icon icon-oop">🔁</div>
+        <span class="subj-badge badge-oop">OOP — Opakovanie</span>
+        <h3>Opakovanie OOP konceptov</h3>
+        <p class="subj-desc">
+          Súhrn OOP termínov a zručností, ktoré musíte ovládať pre úspešné absolvovanie predmetu.
+          Ideálne pre prípravu na skúšku a komisionálne skúšanie.
+        </p>
+        <ul class="topic-list">
+          <li><span class="td td-oop"></span>Kľúčové OOP termíny & definície</li>
+          <li><span class="td td-oop"></span>Triedy, objekty, enkapsulace</li>
+          <li><span class="td td-oop"></span>Dedičnosť & polymorfizmus</li>
+          <li><span class="td td-oop"></span>Príprava na komisionálnu skúšku</li>
+        </ul>
+        <div class="subj-foot">
+          <span class="subj-meta">1 súbor · opakovanie</span>
+          <span class="subj-go go-oop">Otvoriť →</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- PREVIEW / TERMINAL -->
+  <div class="section" id="preview">
+    <div class="sec-head center">
+      <span class="sec-label">// ukážky</span>
+      <h2 class="sec-title">Z hodín priamo sem</h2>
+      <p class="sec-desc">Malý náhľad na obsah, ktorý ťa čaká v materiáloch.</p>
+    </div>
+
+    <div class="code-grid">
+
+      <div class="term rv">
+        <div class="term-bar">
+          <div class="tb tb-r"></div><div class="tb tb-y"></div><div class="tb tb-g"></div>
+          <span class="term-name">PRO :: Big O Notation · C#</span>
+        </div>
+        <div class="term-body">
+<span class="tc">// O(1) — konštantná zložitosť</span><br>
+<span class="tk">int</span> <span class="tv">first</span> = arr[<span class="tn">0</span>]; <span class="tc">// vždy 1 operácia</span><br><br>
+<span class="tc">// O(n) — lineárna zložitosť</span><br>
+<span class="tk">void</span> <span class="tm">Print</span>(<span class="tk">int</span> <span class="tv">n</span>) {<br>
+&nbsp;&nbsp;<span class="tk">for</span> (<span class="tk">int</span> <span class="tv">i</span>=<span class="tn">0</span>; <span class="tv">i</span>&lt;<span class="tv">n</span>; <span class="tv">i</span>++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Console.<span class="tm">WriteLine</span>(<span class="tv">i</span>);<br>
+}<br><br>
+<span class="tc">// O(n²) — kvadratická zložitosť</span><br>
+<span class="tk">void</span> <span class="tm">Pairs</span>(<span class="tk">int</span> <span class="tv">n</span>) {<br>
+&nbsp;&nbsp;<span class="tk">for</span> (<span class="tk">int</span> <span class="tv">i</span>=<span class="tn">0</span>; <span class="tv">i</span>&lt;<span class="tv">n</span>; <span class="tv">i</span>++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<span class="tk">for</span> (<span class="tk">int</span> <span class="tv">j</span>=<span class="tn">0</span>; <span class="tv">j</span>&lt;<span class="tv">n</span>; <span class="tv">j</span>++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Console.<span class="tm">WriteLine</span>(<span class="ts">$"({i},{j})"</span>);<br>
+}
+        </div>
+      </div>
+
+      <div class="term rv d1">
+        <div class="term-bar">
+          <div class="tb tb-r"></div><div class="tb tb-y"></div><div class="tb tb-g"></div>
+          <span class="term-name">SXG :: Linux & Docker</span>
+        </div>
+        <div class="term-body">
+<span class="tp">student@sps:~$</span> <span class="tv">ps aux | grep nginx</span><br>
+<span class="to">root  1337  nginx: master process</span><br>
+<span class="to">www   1338  nginx: worker process</span><br><br>
+<span class="tp">student@sps:~$</span> <span class="tv">docker ps</span><br>
+<span class="to">CONTAINER ID  IMAGE    STATUS   PORTS</span><br>
+<span class="to">a1b2c3d4e5f6  nginx    Up 2h    0.0.0.0:80</span><br>
+<span class="to">b2c3d4e5f6a1  postgres Up 2h    5432/tcp</span><br><br>
+<span class="tp">student@sps:~$</span> <span class="tv">git log --oneline</span><br>
+<span class="to"><span style="color:#ffa657">a3f2e1b</span> feat: add Docker compose</span><br>
+<span class="to"><span style="color:#ffa657">b1c2d3e</span> fix: process pipe race</span><br>
+<span class="to"><span style="color:#ffa657">c4d5e6f</span> docs: update README</span><br><br>
+<span class="tp">student@sps:~$</span> <span class="tv">_</span><span class="tw-cursor"></span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-brand"><b>SPSITKNM</b> · Tomaš Mucha · 2024–2025</div>
+  <div class="f-links">
+    <a href="https://discord.gg/eSQDsna4d7/" target="_blank">Discord</a>
+    <a href="https://www.youtube.com/channel/UC0TOfJp6MtFlLSgfdhnlS9g" target="_blank">YouTube</a>
+    <a href="https://github.com/SPSITKNM" target="_blank">GitHub</a>
+    <a href="http://www.spsknm.sk/ssknm/" target="_blank">Škola</a>
+  </div>
+</footer>
+
+<script>
+// ─── PARTICLES ───
+const C = document.getElementById('ptx');
+const X = C.getContext('2d');
+let W, H, pts = [];
+
+function resize() {
+  W = C.width  = window.innerWidth;
+  H = C.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', () => { resize(); initPts(); });
+
+class Pt {
+  constructor() { this.reset(); }
+  reset() {
+    this.x  = Math.random() * W;
+    this.y  = Math.random() * H;
+    this.r  = Math.random() * 1.2 + 0.4;
+    this.vx = (Math.random() - 0.5) * 0.25;
+    this.vy = (Math.random() - 0.5) * 0.25;
+    this.a  = Math.random() * 0.35 + 0.05;
+  }
+  step() {
+    this.x += this.vx; this.y += this.vy;
+    if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+  }
+  draw() {
+    X.beginPath();
+    X.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+    X.fillStyle = `rgba(99,102,241,${this.a})`;
+    X.fill();
+  }
+}
+
+function initPts() { pts = Array.from({length:90}, () => new Pt()); }
+initPts();
+
+(function loop() {
+  X.clearRect(0,0,W,H);
+  pts.forEach(p => { p.step(); p.draw(); });
+  requestAnimationFrame(loop);
+})();
+
+// ─── TYPEWRITER ───
+const words = [
+  'OOP v C#', 'Algoritmy & Big O', 'Linux & Procesy',
+  'Docker & KVM', 'Git & GitLab', 'Dátové štruktúry',
+  'OpenTelemetry', 'Polymorfizmus', 'Virtualizácia'
+];
+let wi=0, ci=0, del=false;
+const twEl = document.getElementById('tw');
+
+function tw() {
+  const w = words[wi];
+  if (!del) {
+    twEl.textContent = w.slice(0, ++ci);
+    if (ci === w.length) { del=true; setTimeout(tw, 2200); return; }
+  } else {
+    twEl.textContent = w.slice(0, --ci);
+    if (ci === 0) { del=false; wi = (wi+1) % words.length; }
+  }
+  setTimeout(tw, del ? 55 : 85);
+}
+tw();
+
+// ─── SCROLL REVEAL ───
+const obs = new IntersectionObserver(
+  entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+  }),
+  { threshold: 0.08 }
+);
+document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+
+// ─── 3D TILT ───
+document.querySelectorAll('.tilt').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width  - 0.5;
+    const y = (e.clientY - r.top)  / r.height - 0.5;
+    card.style.transform = `perspective(1000px) rotateY(${x*9}deg) rotateX(${-y*9}deg) translateY(-6px)`;
+  });
+  card.addEventListener('mouseleave', () => { card.style.transform = ''; });
+});
+
+// ─── NAV ACTIVE ───
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.background =
+    window.scrollY > 10 ? 'rgba(3,7,18,0.92)' : 'rgba(3,7,18,0.75)';
+});
+</script>
+</body>
+</html>
