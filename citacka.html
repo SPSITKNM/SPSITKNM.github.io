@@ -64,6 +64,7 @@
     <p class="article__hd" data-a-hd>Načítavam…</p>
     <h1 class="display" style="font-size:clamp(28px,3.6vw,42px)" data-a-title>&nbsp;</h1>
     <div class="article__meta" data-a-meta></div>
+    <div data-a-video hidden></div>
     <div class="prose" data-a-body>
       <p class="muted">Načítavam dokument z GitHubu…</p>
     </div>
@@ -126,6 +127,7 @@
       '<span><a class="lnk" href="https://github.com/SPSITKNM/' + set.subject.repo + '/blob/main/' + encodeURIComponent(doc.file) + '">zdroj v repe ↗</a></span>';
     var srcUrl = 'https://github.com/SPSITKNM/' + set.subject.repo + '/blob/main/' + encodeURIComponent(doc.file);
     document.querySelector('[data-src-link]').href = srcUrl;
+    renderVideo(doc.video || [], set.subject.playlist);
 
     // prev / next — v poradí trate, inak v poradí docs
     var order = docs.map(function (d) { return d.slug; });
@@ -190,6 +192,33 @@
     });
   }).catch(function () { fail('Predmet sa nenačítal.'); });
 
+  function renderVideo(list, playlist) {
+    var box = document.querySelector('[data-a-video]');
+    if (!list.length) { box.hidden = true; return; }
+    var main = list[0], rest = list.slice(1);
+    var plHref = playlist ? 'https://www.youtube.com/playlist?list=' + playlist : ('https://www.youtube.com/watch?v=' + main.id);
+    var PLAY = '<span class="video__play"><svg viewBox="0 0 68 48" aria-hidden="true"><path d="M66.5 7.7a8 8 0 0 0-5.6-5.7C56 .6 34 .6 34 .6s-22 0-26.9 1.4A8 8 0 0 0 1.5 7.7 84 84 0 0 0 0 24a84 84 0 0 0 1.5 16.3 8 8 0 0 0 5.6 5.7C12 47.4 34 47.4 34 47.4s22 0 26.9-1.4a8 8 0 0 0 5.6-5.7A84 84 0 0 0 68 24a84 84 0 0 0-1.5-16.3z" fill="#f00"/><path d="M45 24 27 14v20z" fill="#fff"/></svg></span>';
+    box.innerHTML =
+      '<div class="video">' +
+      '  <div class="video__hd"><span class="k">Video k tejto téme</span>' +
+      '    <a class="lnk" href="' + plHref + '" target="_blank" rel="noopener">celý playlist ↗</a></div>' +
+      '  <button type="button" class="video__frame" data-vid="' + main.id + '" aria-label="Prehrať: ' + T.esc(main.title) + '">' +
+      '    <img loading="lazy" alt="" src="https://i.ytimg.com/vi/' + main.id + '/hqdefault.jpg">' + PLAY +
+      '  </button>' +
+      '  <div class="video__cap">' + T.esc(main.title) + '</div>' +
+      (rest.length ? '<div class="video__more">' + rest.map(function (v, i) {
+        return '<a href="https://www.youtube.com/watch?v=' + v.id + '&list=' + (playlist || '') + '" target="_blank" rel="noopener">' +
+          '<span class="ix">' + (i + 2) + '</span><span>' + T.esc(v.title) + '</span></a>';
+      }).join('') + '</div>' : '') +
+      '</div>';
+    box.hidden = false;
+    box.querySelector('.video__frame').addEventListener('click', function () {
+      this.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + this.getAttribute('data-vid') +
+        '?autoplay=1&rel=0&modestbranding=1" title="YouTube video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+      var cap = box.querySelector('.video__cap'); if (cap) cap.remove();
+    });
+  }
+
   function fail(msg) {
     document.querySelector('[data-a-hd]').textContent = 'Chyba';
     document.querySelector('[data-a-title]').textContent = 'Nedá sa zobraziť';
@@ -224,32 +253,37 @@
   var CODEY = /[;{}]\s*$|^\s*(#include|#define|using\s|namespace\s|template\s*<|for\s*\(|while\s*\(|if\s*\(|else\b|return\b|int\s|void\s|bool\s|char\s|long\s|double\s|float\s|auto\s|const\s|struct\s|class\s|public:|private:|protected:|std::|cout\s*<<|cin\s*>>|printf\(|scanf\(|Console\.|System\.|\$\s|sudo\s|docker\s|git\s|dnf\s|apt\s|systemctl\s|virsh\s)/;
   function looksCodey(l) { return l.trim() !== '' && CODEY.test(l); }
 
+  var FENCE = /(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]+`)/;
+  function wrapUnfenced(text) {
+    // nezabalený kód → zabaliť do fence (konzervatívne: beh ≥3 riadkov, ≥70 % "kódových")
+    var lines = text.split('\n'), out = [], run = [];
+    function flush() {
+      var solid = run.filter(function (l) { return l.trim() !== ''; });
+      var codey = solid.filter(looksCodey).length;
+      if (solid.length >= 3 && codey / solid.length >= 0.7) {
+        out.push('```', run.join('\n').replace(/^\n+|\n+$/g, ''), '```');
+      } else { out.push.apply(out, run); }
+      run = [];
+    }
+    for (var j = 0; j < lines.length; j++) {
+      var l = lines[j];
+      if (/^\s*(#{1,6}\s|[-*+]\s|\d+\.\s|>|\||!\[|\[.*\]\()/.test(l)) { flush(); out.push(l); continue; }
+      if (looksCodey(l) || (run.length && l.trim() === '')) { run.push(l); }
+      else { flush(); out.push(l); }
+    }
+    flush();
+    return out.join('\n');
+  }
+  function escapeAngles(text) {
+    // `<vector>` / `<iostream>` mimo fence by inak požral DOMPurify
+    return text.replace(/<(\/?)([A-Za-z][\w-]*)((?:\s[^<>]*?)?)\s*(\/?)>/g, function (m, sl, tag) {
+      return OK_TAGS.test(tag) ? m : m.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    });
+  }
   function preClean(md) {
-    return md.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]+`)/).map(function (chunk, i) {
-      if (i % 2) return chunk; // fenced blok / inline kód necháme tak
-      // 1) escape uhlových zátvoriek mimo fence (inak `<vector>` požerie DOMPurify)
-      chunk = chunk.replace(/<(\/?)([A-Za-z][\w-]*)((?:\s[^<>]*?)?)\s*(\/?)>/g, function (m, sl, tag) {
-        return OK_TAGS.test(tag) ? m : m.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      });
-      // 2) nezabalený kód → zabaliť do fence (konzervatívne: beh ≥3 riadkov, ≥70 % "kódových")
-      var lines = chunk.split('\n'), out = [], run = [];
-      function flush() {
-        var solid = run.filter(function (l) { return l.trim() !== ''; });
-        var codey = solid.filter(looksCodey).length;
-        if (solid.length >= 3 && codey / solid.length >= 0.7) {
-          out.push('```', run.join('\n').replace(/^\n+|\n+$/g, ''), '```');
-        } else { out.push.apply(out, run); }
-        run = [];
-      }
-      for (var j = 0; j < lines.length; j++) {
-        var l = lines[j];
-        if (/^\s*(#{1,6}\s|[-*+]\s|\d+\.\s|>|\||!\[|\[.*\]\()/.test(l)) { flush(); out.push(l); continue; }
-        if (looksCodey(l) || (run.length && l.trim() === '')) { run.push(l); }
-        else { flush(); out.push(l); }
-      }
-      flush();
-      return out.join('\n');
-    }).join('');
+    // 1) zabaliť nezabalený kód → 2) až potom escape zátvoriek mimo (teraz širších) fence
+    md = md.split(FENCE).map(function (c, i) { return i % 2 ? c : wrapUnfenced(c); }).join('');
+    return md.split(FENCE).map(function (c, i) { return i % 2 ? c : escapeAngles(c); }).join('');
   }
 
   function render(md, doc, srcUrl) {

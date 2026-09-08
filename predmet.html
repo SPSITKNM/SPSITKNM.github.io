@@ -47,6 +47,9 @@
         <p class="eyebrow" data-subj-eyebrow style="margin-bottom:10px">PREDMET</p>
         <h1 class="display" style="font-size:clamp(28px,4.4vw,42px)" data-subj-name>—</h1>
         <p class="lede" style="max-width:52ch;margin-top:10px" data-subj-lede></p>
+        <a class="btn btn--sm" data-playlist href="#" target="_blank" rel="noopener" hidden style="margin-top:14px">
+          <svg class="ic" width="14" height="14"><use href="/assets/icons.svg#youtube"/></svg> Video kurz na YouTube
+        </a>
       </div>
       <div class="deadline" data-deadline hidden>
         <div class="deadline__n"><b data-dl-days>—</b><span>DNÍ</span></div>
@@ -110,6 +113,12 @@
     document.querySelector('[data-subj-name]').textContent = sub.name;
     document.querySelector('[data-subj-lede]').textContent = sub.lede || '';
     document.querySelector('[data-repo-link]').href = 'https://github.com/SPSITKNM/' + sub.repo;
+    if (sub.playlist) {
+      var pl = document.querySelector('[data-playlist]');
+      pl.href = 'https://www.youtube.com/playlist?list=' + sub.playlist; pl.hidden = false;
+      var vids = (set.docs || []).reduce(function (n, d) { return n + ((d.video || []).length); }, 0);
+      if (vids) pl.lastChild.textContent = ' Video kurz — ' + vids + ' videí k tomuto predmetu';
+    }
 
     var docs = set.docs || [];
     var bySlug = {}; docs.forEach(function (d) { bySlug[d.slug] = d; });

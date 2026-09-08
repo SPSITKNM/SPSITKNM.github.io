@@ -5,117 +5,415 @@
     "accent": "pro",
     "repo": "SPSITKNM",
     "lede": "Od syntaxe C# k dátovým štruktúram a grafovým algoritmom. Rok končí projektom a komisionálnou skúškou.",
-    "deadline": null
+    "deadline": null,
+    "playlist": "PLJW-oHbyRDeJt24tw-RaHJwxbXUCh3GrQ"
   },
   "tracks": [
-    { "id": "jazyk", "name": "1 · Jazyk", "note": "C# od základov po samostatnú prácu na hodine.", "docs": ["poznamky", "nalezitosti", "zadania-na-hodine"] },
-    { "id": "struktury", "name": "2 · Štruktúry a algoritmy", "note": "Dátové štruktúry v C++, testy a opravné úlohy.", "docs": ["algoritmizacia", "zadania-na-domacu-pracu", "opravne-ulohy"] },
-    { "id": "projekt", "name": "3 · Projekt a skúška", "note": "Výber témy, systémová analýza, rozsah komisionálnej skúšky.", "docs": ["projekty", "systemova-analyza", "komisionalna-skuska"] }
+    {
+      "id": "jazyk",
+      "name": "1 · Jazyk",
+      "note": "C# od základov po samostatnú prácu na hodine.",
+      "docs": [
+        "poznamky",
+        "nalezitosti",
+        "zadania-na-hodine"
+      ]
+    },
+    {
+      "id": "struktury",
+      "name": "2 · Štruktúry a algoritmy",
+      "note": "Dátové štruktúry v C++, testy a opravné úlohy.",
+      "docs": [
+        "algoritmizacia",
+        "zadania-na-domacu-pracu",
+        "opravne-ulohy"
+      ]
+    },
+    {
+      "id": "projekt",
+      "name": "3 · Projekt a skúška",
+      "note": "Výber témy, systémová analýza, rozsah komisionálnej skúšky.",
+      "docs": [
+        "projekty",
+        "systemova-analyza",
+        "komisionalna-skuska"
+      ]
+    }
   ],
   "docs": [
     {
-      "slug": "poznamky", "file": "poznamky.md",
+      "slug": "poznamky",
+      "file": "poznamky.md",
       "title": "Poznámky z hodín — C# od základov",
       "desc": "Syntax, premenné, dátové typy a ich rozsahy, pretečenie, konvencie pomenovania, výrazy a string interpolácia.",
-      "kind": "skripta", "lang": ["cs"], "words": 11213, "updated": "2026-05-05",
-      "headings": ["Syntax", "Premenné", "Dátové typy", "Celočíselné typy", "Pretečenie", "Pomenovanie premenných", "Konštanty", "Logické operácie", "String interpolácia"],
-      "related": ["pro/algoritmizacia", "oop/oop-opakovanie"]
+      "kind": "skripta",
+      "lang": [
+        "cs"
+      ],
+      "words": 11213,
+      "updated": "2026-05-05",
+      "headings": [
+        "Syntax",
+        "Premenné",
+        "Dátové typy",
+        "Celočíselné typy",
+        "Pretečenie",
+        "Pomenovanie premenných",
+        "Konštanty",
+        "Logické operácie",
+        "String interpolácia"
+      ],
+      "related": [
+        "pro/algoritmizacia",
+        "oop/oop-opakovanie"
+      ],
+      "video": [
+        {
+          "id": "cgE6jRMXsfI",
+          "title": "Úvod do predmetu PRO"
+        },
+        {
+          "id": "G8F6hIcCAzk",
+          "title": "Operátory, premenné, modifikátory, Stack vs Heap"
+        }
+      ]
     },
     {
-      "slug": "algoritmizacia", "file": "algoritmizacia.md",
+      "slug": "algoritmizacia",
+      "file": "algoritmizacia.md",
       "title": "Algoritmizácia a dátové štruktúry",
       "desc": "Vector vs spojkový zoznam, konštrukcia a operácie LL/DLL, zásobník a fronta, zložitosť — v C++.",
-      "kind": "skripta", "lang": ["cpp"], "words": 6213, "updated": "2026-05-05",
-      "headings": ["Vector vs LinkedList", "Konštrukcia zoznamu", "Append a delete", "Reverse", "Doubly linked list", "Stack", "Queue", "push pop enqueue dequeue", "Big O"],
-      "related": ["pro/zadania-na-domacu-pracu", "pro/projekty", "oop/oop-opakovanie"]
+      "kind": "skripta",
+      "lang": [
+        "cpp"
+      ],
+      "words": 6213,
+      "updated": "2026-05-05",
+      "headings": [
+        "Vector vs LinkedList",
+        "Konštrukcia zoznamu",
+        "Append a delete",
+        "Reverse",
+        "Doubly linked list",
+        "Stack",
+        "Queue",
+        "push pop enqueue dequeue",
+        "Big O"
+      ],
+      "related": [
+        "pro/zadania-na-domacu-pracu",
+        "pro/projekty",
+        "oop/oop-opakovanie"
+      ],
+      "video": [
+        {
+          "id": "lN-TrkF8WHQ",
+          "title": "Úvod do algoritmizácie"
+        },
+        {
+          "id": "bxXmgMqjGwM",
+          "title": "Triediace algoritmy"
+        }
+      ]
     },
     {
-      "slug": "komisionalna-skuska", "file": "komisionalna_skuska.md",
+      "slug": "komisionalna-skuska",
+      "file": "komisionalna_skuska.md",
       "title": "Rozsah komisionálnej skúšky",
       "desc": "Čo sa pýtam, v akom rozsahu a ako sa hodnotí ústna časť z programovania a SMART technológií.",
-      "kind": "rozsah", "lang": [], "words": 4848, "updated": "2026-05-05",
-      "headings": ["Okruhy", "OOP", "Dátové štruktúry", "Algoritmy a zložitosť", "Linux a Docker", "Hodnotenie ústnej časti"],
-      "related": ["pro/algoritmizacia", "oop/oop-opakovanie", "sxg/docker"]
+      "kind": "rozsah",
+      "lang": [],
+      "words": 4848,
+      "updated": "2026-05-05",
+      "headings": [
+        "Okruhy",
+        "OOP",
+        "Dátové štruktúry",
+        "Algoritmy a zložitosť",
+        "Linux a Docker",
+        "Hodnotenie ústnej časti"
+      ],
+      "related": [
+        "pro/algoritmizacia",
+        "oop/oop-opakovanie",
+        "sxg/docker"
+      ]
     },
     {
-      "slug": "projekty", "file": "projekty.md",
+      "slug": "projekty",
+      "file": "projekty.md",
       "title": "Projektové zadania — 2. polrok",
       "desc": "Šesť tém: k-tá minimálna kostra grafu, minimálna cena prepravy, násobenie matíc, cesty jaskyňou, bipartitný graf, optimalizácia rozvrhu. Deadline a pokyny.",
-      "kind": "zadanie", "lang": ["cpp"], "words": 3678, "updated": "2026-05-05",
-      "headings": ["Deadline", "Všeobecné pokyny", "k-tá minimálna kostra grafu", "Minimálna cena prepravy tovaru", "Násobenie postupnosti matíc", "Cesty jaskynným systémom", "Bipartitný graf", "Optimalizácia rozvrhu úloh"],
-      "related": ["pro/systemova-analyza", "pro/algoritmizacia"]
+      "kind": "zadanie",
+      "lang": [
+        "cpp"
+      ],
+      "words": 3678,
+      "updated": "2026-05-05",
+      "headings": [
+        "Deadline",
+        "Všeobecné pokyny",
+        "k-tá minimálna kostra grafu",
+        "Minimálna cena prepravy tovaru",
+        "Násobenie postupnosti matíc",
+        "Cesty jaskynným systémom",
+        "Bipartitný graf",
+        "Optimalizácia rozvrhu úloh"
+      ],
+      "related": [
+        "pro/systemova-analyza",
+        "pro/algoritmizacia"
+      ],
+      "video": [
+        {
+          "id": "OQK1QLuVsoM",
+          "title": "Algoritmizácia — projekt číslo 1"
+        },
+        {
+          "id": "txTtQbT_60U",
+          "title": "Videoherný projekt číslo 1"
+        }
+      ]
     },
     {
-      "slug": "opravne-ulohy", "file": "opravne_ulohy.md",
+      "slug": "opravne-ulohy",
+      "file": "opravne_ulohy.md",
       "title": "Opravné úlohy — C++ OOP",
       "desc": "Úlohy na opravu známky po témach: databáza študentov, playlist manager, mini knižnica a ďalšie.",
-      "kind": "zadanie", "lang": ["cpp"], "words": 3570, "updated": "2026-05-05",
-      "headings": ["Student Database", "Music Playlist Manager", "Mini Library System", "Všeobecné pokyny"],
-      "related": ["pro/zadania-na-domacu-pracu"]
+      "kind": "zadanie",
+      "lang": [
+        "cpp"
+      ],
+      "words": 3570,
+      "updated": "2026-05-05",
+      "headings": [
+        "Student Database",
+        "Music Playlist Manager",
+        "Mini Library System",
+        "Všeobecné pokyny"
+      ],
+      "related": [
+        "pro/zadania-na-domacu-pracu"
+      ]
     },
     {
-      "slug": "zadania-na-hodine", "file": "zadania_na_hodine.md",
+      "slug": "zadania-na-hodine",
+      "file": "zadania_na_hodine.md",
       "title": "AI Workshop — pracovný list",
       "desc": "Praktický workshop ku Claude Code: setup, integrácia s IDE, správa povolení, plan mode, context engineering, hooks a multi-agent systémy.",
-      "kind": "zadanie", "lang": ["bash"], "words": 3000, "updated": "2026-05-05",
-      "headings": ["Setup a základy", "Base usage a IDE integrácia", "Permissions Management", "Version Control a Undo", "Plan Mode", "Context Engineering", "Skills a Custom Commands", "Hooks a Plugins", "Multi-Agent systémy"],
-      "related": ["sxg/git-github-gitlab"]
+      "kind": "zadanie",
+      "lang": [
+        "bash"
+      ],
+      "words": 3000,
+      "updated": "2026-05-05",
+      "headings": [
+        "Setup a základy",
+        "Base usage a IDE integrácia",
+        "Permissions Management",
+        "Version Control a Undo",
+        "Plan Mode",
+        "Context Engineering",
+        "Skills a Custom Commands",
+        "Hooks a Plugins",
+        "Multi-Agent systémy"
+      ],
+      "related": [
+        "sxg/git-github-gitlab"
+      ]
     },
     {
-      "slug": "zadania-na-domacu-pracu", "file": "zadania_na_domacu_pracu.md",
+      "slug": "zadania-na-domacu-pracu",
+      "file": "zadania_na_domacu_pracu.md",
       "title": "Test: dátové štruktúry",
       "desc": "Domáce zadania po sekciách: spojkový zoznam, zásobník a fronta, binárny vyhľadávací strom, hash table, graf.",
-      "kind": "zadanie", "lang": ["cpp"], "words": 2767, "updated": "2026-05-05",
-      "headings": ["Linked List", "Stack a Queue", "Overenie závoriek", "Binárny vyhľadávací strom", "Hash Table", "Graf — Add Vertex, Add Edge"],
-      "related": ["pro/algoritmizacia", "pro/opravne-ulohy"]
+      "kind": "zadanie",
+      "lang": [
+        "cpp"
+      ],
+      "words": 2767,
+      "updated": "2026-05-05",
+      "headings": [
+        "Linked List",
+        "Stack a Queue",
+        "Overenie závoriek",
+        "Binárny vyhľadávací strom",
+        "Hash Table",
+        "Graf — Add Vertex, Add Edge"
+      ],
+      "related": [
+        "pro/algoritmizacia",
+        "pro/opravne-ulohy"
+      ]
     },
     {
-      "slug": "sutaz", "file": "Súťaž.md",
+      "slug": "sutaz",
+      "file": "Súťaž.md",
       "title": "Súťaž v angličtine",
       "desc": "Tímová súťaž vo formáte Advent of Code. Zadania v angličtine, zákaz AI, povolené len oficiálne dokumentácie a fóra.",
-      "kind": "zadanie", "lang": ["cpp"], "words": 2064, "updated": "2026-05-05",
-      "headings": ["Competition Rules", "Restrictions on AI Usage", "Hans Red-Nosed Reports", "Adams Corrupted Memory", "Tewys Ceres Search", "Resonant Collinearity", "Disk Fragmenter"],
-      "related": ["pro/algoritmizacia"]
+      "kind": "zadanie",
+      "lang": [
+        "cpp"
+      ],
+      "words": 2064,
+      "updated": "2026-05-05",
+      "headings": [
+        "Competition Rules",
+        "Restrictions on AI Usage",
+        "Hans Red-Nosed Reports",
+        "Adams Corrupted Memory",
+        "Tewys Ceres Search",
+        "Resonant Collinearity",
+        "Disk Fragmenter"
+      ],
+      "related": [
+        "pro/algoritmizacia"
+      ]
     },
     {
-      "slug": "systemova-analyza", "file": "Systémová analýza projektu.md",
+      "slug": "systemova-analyza",
+      "file": "Systémová analýza projektu.md",
       "title": "Systémová analýza projektu — šablóna",
       "desc": "Osnova projektovej dokumentácie: FURPS, hranice systému, aktéri, Use Case a triedny diagram — na príklade diagnostického systému pre automobily.",
-      "kind": "sablona", "lang": [], "words": 1317, "updated": "2026-05-05",
-      "headings": ["Zoznam kapitol", "Dôvod zavedenia riešenia", "Analýza požiadaviek", "FURPS", "Kritické situácie", "Hranice systému", "Charakteristika aktérov", "Use Case diagram", "Triedny diagram"],
-      "related": ["pro/projekty"]
+      "kind": "sablona",
+      "lang": [],
+      "words": 1317,
+      "updated": "2026-05-05",
+      "headings": [
+        "Zoznam kapitol",
+        "Dôvod zavedenia riešenia",
+        "Analýza požiadaviek",
+        "FURPS",
+        "Kritické situácie",
+        "Hranice systému",
+        "Charakteristika aktérov",
+        "Use Case diagram",
+        "Triedny diagram"
+      ],
+      "related": [
+        "pro/projekty"
+      ],
+      "video": [
+        {
+          "id": "jTKJjX_n7xI",
+          "title": "FURPS Analýza"
+        }
+      ]
     },
     {
-      "slug": "nalezitosti", "file": "nalezitosti.md",
+      "slug": "nalezitosti",
+      "file": "nalezitosti.md",
       "title": "Nastavenie prostredia pre C#",
       "desc": "Inštalácia .NET SDK, Visual Studio Code a C# rozšírenia; overenie a prvý konzolový projekt.",
-      "kind": "cheatsheet", "lang": ["bash", "cs"], "words": 375, "updated": "2026-05-05",
-      "headings": [".NET SDK", "Visual Studio Code", "C# rozšírenie", "dotnet new console", "dotnet run"],
-      "related": ["pro/poznamky"]
+      "kind": "cheatsheet",
+      "lang": [
+        "bash",
+        "cs"
+      ],
+      "words": 375,
+      "updated": "2026-05-05",
+      "headings": [
+        ".NET SDK",
+        "Visual Studio Code",
+        "C# rozšírenie",
+        "dotnet new console",
+        "dotnet run"
+      ],
+      "related": [
+        "pro/poznamky"
+      ],
+      "video": [
+        {
+          "id": "5UyUwXtEIgA",
+          "title": "Nastavenie editora pre vývoj"
+        }
+      ]
     },
     {
-      "slug": "linux-commands", "file": "Linux Commands Cheat Sheet.md",
+      "slug": "linux-commands",
+      "file": "Linux Commands Cheat Sheet.md",
       "title": "Linux — cheat sheet príkazov",
       "desc": "Najpoužívanejšie príkazy na jednej strane: pohyb v systéme, súbory, práva, procesy, sieť.",
-      "kind": "cheatsheet", "lang": ["bash"], "words": 1074, "updated": "2026-05-05",
-      "headings": ["Pohyb v systéme", "Práca so súbormi", "Práva", "Procesy", "Sieť", "Archívy"],
-      "related": ["sxg/linux-commands", "sxg/uvod-do-operacnych-systemov"]
+      "kind": "cheatsheet",
+      "lang": [
+        "bash"
+      ],
+      "words": 1074,
+      "updated": "2026-05-05",
+      "headings": [
+        "Pohyb v systéme",
+        "Práca so súbormi",
+        "Práva",
+        "Procesy",
+        "Sieť",
+        "Archívy"
+      ],
+      "related": [
+        "sxg/linux-commands",
+        "sxg/uvod-do-operacnych-systemov"
+      ],
+      "video": [
+        {
+          "id": "NE3r0i5cENI",
+          "title": "Úvod do Linuxu a príkazov terminálu"
+        }
+      ]
     },
     {
-      "slug": "github-vs-gitlab", "file": "GitHub_vs_GitLab.md",
+      "slug": "github-vs-gitlab",
+      "file": "GitHub_vs_GitLab.md",
       "title": "GitHub vs GitLab",
       "desc": "Rozdiely platforiem, merge a konflikty, CI/CD pipeline, kedy v škole používame čo.",
-      "kind": "cheatsheet", "lang": ["bash"], "words": 1142, "updated": "2026-05-05",
-      "headings": ["Merge a konflikty", "Merge conflicts a pipelines", "CI / CD", "Continuous Delivery Pipeline", "Docker build"],
-      "related": ["sxg/git-github-gitlab"]
+      "kind": "cheatsheet",
+      "lang": [
+        "bash"
+      ],
+      "words": 1142,
+      "updated": "2026-05-05",
+      "headings": [
+        "Merge a konflikty",
+        "Merge conflicts a pipelines",
+        "CI / CD",
+        "Continuous Delivery Pipeline",
+        "Docker build"
+      ],
+      "related": [
+        "sxg/git-github-gitlab"
+      ],
+      "video": [
+        {
+          "id": "yZFV4qWQLkU",
+          "title": "GitHub Tutorial"
+        }
+      ]
     },
     {
-      "slug": "makefile", "file": "Makefile.md",
+      "slug": "makefile",
+      "file": "Makefile.md",
       "title": "Makefile — základy",
       "desc": "Pravidlá, ciele a premenné; automatizácia prekladu C/C++ projektu.",
-      "kind": "cheatsheet", "lang": ["bash"], "words": 844, "updated": "2026-05-05",
-      "headings": ["Pravidlá a ciele", "Premenné", "Phony ciele", "Automatické premenné", "Príklad pre C++"],
-      "related": ["sxg/makefile"]
+      "kind": "cheatsheet",
+      "lang": [
+        "bash"
+      ],
+      "words": 844,
+      "updated": "2026-05-05",
+      "headings": [
+        "Pravidlá a ciele",
+        "Premenné",
+        "Phony ciele",
+        "Automatické premenné",
+        "Príklad pre C++"
+      ],
+      "related": [
+        "sxg/makefile"
+      ],
+      "video": [
+        {
+          "id": "-GgJvWlW9kc",
+          "title": "Makefile"
+        }
+      ]
     }
   ]
 }
