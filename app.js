@@ -39,9 +39,25 @@
     return scriptCache[src];
   }
 
+  /* ── Emoji preč (display vrstva — zdrojové .md ostávajú kompatibilné s GitHubom) ── */
+  // pictografy, emotikony, doprava, doplnkové symboly, vlajky, dingbaty + VS16/ZWJ.
+  // Zámerne NEchytá  →  ←  ↗  §  —  ·  ⌘  ©  ™  ani číslice/#.
+  var EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{1F1E6}-\u{1F1FF}\u{FE0F}\u{200D}\u{20E3}]/gu;
+  function stripEmojiDom(root) {
+    if (!root) return;
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var nodes = [], n;
+    while ((n = w.nextNode())) if (EMOJI.test(n.nodeValue)) { EMOJI.lastIndex = 0; nodes.push(n); }
+    nodes.forEach(function (t) {
+      var v = t.nodeValue.replace(EMOJI, '').replace(/[ \t]{2,}/g, ' ');
+      if (t.parentElement && /^H[1-6]$/.test(t.parentElement.tagName)) v = v.replace(/^[\s·:–—-]+/, '');
+      t.nodeValue = v;
+    });
+  }
+
   /* ── Téma ──────────────────────────────────────────────────────────────── */
   var THEMES = ['system', 'light', 'dark'];
-  var THEME_LABEL = { system: 'Téma: systém', light: 'Papier ○', dark: 'Plot ●' };
+  var THEME_LABEL = { system: 'Systém', light: 'Papier', dark: 'Plot' };
 
   function applyTheme(t) {
     var root = document.documentElement;
@@ -100,7 +116,7 @@
     if (navigator.clipboard) navigator.clipboard.writeText(txt).catch(function () {});
     else { var r = document.createRange(); r.selectNodeContents(pre); var sel = getSelection(); sel.removeAllRanges(); sel.addRange(r); }
     var old = btn.textContent;
-    btn.textContent = 'skopírované ✓'; btn.setAttribute('data-done', '');
+    btn.textContent = 'skopírované'; btn.setAttribute('data-done', '');
     var live = document.getElementById('teren-live'); if (live) live.textContent = 'Kód skopírovaný do schránky';
     clearTimeout(btn._t);
     btn._t = setTimeout(function () { btn.textContent = old; btn.removeAttribute('data-done'); }, 1500);
@@ -132,6 +148,7 @@
       .then(function (md) {
         var body = el.querySelector('[data-news-body]') || el;
         body.innerHTML = window.DOMPurify.sanitize(window.marked.parse(md));
+        stripEmojiDom(body);
         var first = body.firstElementChild;
         if (first && /^H[1-3]$/.test(first.tagName)) first.remove(); // blok má vlastný štítok
         el.hidden = false;
@@ -387,7 +404,7 @@
   /* ── Verejné API ──────────────────────────────────────────────────────── */
   window.TEREN = {
     BASE: BASE, RAW: RAW, CDN: CDN, SUBJECTS: SUBJECTS, ls: ls,
-    loadScript: loadScript, contourSVG: contourSVG, loadNews: loadNews,
+    loadScript: loadScript, contourSVG: contourSVG, loadNews: loadNews, stripEmojiDom: stripEmojiDom,
     isRead: isRead, toggleRead: toggleRead, readCount: readCount,
     lastRead: lastRead, markSeen: markSeen, readingMins: readingMins, isNew: isNew,
     openPalette: openPalette, esc: esc, initChecklist: initChecklist

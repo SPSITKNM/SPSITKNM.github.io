@@ -169,11 +169,11 @@
 
     // mark read
     var mr = document.querySelector('[data-mark-read]');
-    if (T.isRead(s, slug)) { mr.setAttribute('aria-pressed', 'true'); mr.textContent = '✓ Prečítané'; }
+    if (T.isRead(s, slug)) { mr.setAttribute('aria-pressed', 'true'); mr.textContent = 'Prečítané'; }
     mr.addEventListener('click', function () {
       var on = T.toggleRead(s, slug);
       mr.setAttribute('aria-pressed', on ? 'true' : 'false');
-      mr.textContent = on ? '✓ Prečítané' : 'Označiť prečítané';
+      mr.textContent = on ? 'Prečítané' : 'Označiť prečítané';
     });
     T.markSeen(s, slug);
 
@@ -258,6 +258,7 @@
     var clean = window.DOMPurify.sanitize(dirty, { ADD_ATTR: ['target', 'rel'] });
     var body = document.querySelector('[data-a-body]');
     body.innerHTML = clean;
+    T.stripEmojiDom(body);
 
     // 0) upratanie: zmazať prázdne sekcie (nadpis, po ktorom hneď nasleduje nadpis) a duplikáty
     var hs0 = Array.prototype.slice.call(body.querySelectorAll('h1,h2,h3,h4'));

@@ -152,7 +152,7 @@
         var read = T.isRead(s, d.slug);
         var tags = (d.lang || []).map(function (l) { return '<span class="tag">' + l + '</span>'; }).join('') +
           '<span class="tag">' + (KIND_LABEL[d.kind] || d.kind || '') + '</span>' +
-          (read ? '<span class="tag tag--acc">✓ prečítané</span>' : '');
+          (read ? '<span class="tag tag--acc">prečítané</span>' : '');
         return '<a class="doc" href="/citacka.html?s=' + s + '&doc=' + d.slug + '"' + (T.isNew(d.updated) ? ' data-new' : '') + '>' +
           '<div class="doc__hd"><span class="doc__t">' + T.esc(d.title) + '</span><span class="doc__mins">' + mins + ' min</span></div>' +
           '<div class="doc__d">' + T.esc(d.desc || '') + '</div>' +

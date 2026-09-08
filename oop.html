@@ -97,7 +97,7 @@
     box.innerHTML = (set.topics || []).map(function (t) {
       var url = refUrl(t.ref || 'oop/oop-opakovanie');
       return '<button type="button" class="check" data-id="' + t.id + '" aria-pressed="false">' +
-        '<span class="box" aria-hidden="true">✓</span>' +
+        '<span class="box" aria-hidden="true"><svg width="12" height="12"><use href="/assets/icons.svg#check"/></svg></span>' +
         '<span style="min-width:0"><span class="nm">' + T.esc(t.name) + '</span>' +
         '<span class="hi">' + T.esc(t.hint) + ' · <a class="lnk" href="' + url + '" onclick="event.stopPropagation()">otvoriť</a></span></span>' +
         '</button>';
