@@ -76,21 +76,24 @@
       "slug": "uvod-do-operacnych-systemov",
       "file": "Uvod_do_operacnych_systemov.md",
       "title": "Úvod do operačných systémov",
-      "desc": "Procesy a ich stavy, PCB, fork, exec, pipe medzi rodičom a dieťaťom, wait a zombie procesy.",
+      "desc": "Proces ako bežiaca inštancia programu a jeho stavy, PCB, čo fork() vracia rodičovi a dieťaťu, wait() a zombie procesy, pipe a file descriptory.",
       "kind": "skripta",
       "lang": [
+        "c",
         "bash"
       ],
-      "words": 2849,
-      "updated": "2026-05-05",
+      "words": 2322,
+      "updated": "2026-09-08",
       "headings": [
-        "Procesy",
+        "Proces — bežiaca inštancia programu",
         "Stavový diagram procesu",
-        "PCB",
-        "fork",
-        "exec",
-        "pipe",
-        "wait a zombie"
+        "Process Control Block (PCB)",
+        "Čo sa stane pri fork()",
+        "Funkcia wait()",
+        "Pipe (rúra)",
+        "File descriptor (FD)",
+        "Základná komunikácia — jednoduchý príklad",
+        "Celková štruktúra projektu (routing)"
       ],
       "related": [
         "sxg/linux-commands",
