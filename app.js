@@ -42,10 +42,16 @@
   /* ── Emoji preč (display vrstva — zdrojové .md ostávajú kompatibilné s GitHubom) ── */
   // pictografy, emotikony, doprava, doplnkové symboly, vlajky, dingbaty + VS16/ZWJ.
   // Zámerne NEchytá  →  ←  ↗  §  —  ·  ⌘  ©  ™  ani číslice/#.
-  var EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{231A}\u{231B}\u{23E9}-\u{23FA}\u{2934}\u{2935}\u{3030}\u{303D}\u{3297}\u{3299}\u{1F1E6}-\u{1F1FF}\u{FE0F}\u{200D}\u{20E3}]/gu;
+  var EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{25A0}-\u{25FF}\u{2B00}-\u{2BFF}\u{231A}\u{231B}\u{23E9}-\u{23FA}\u{2934}\u{2935}\u{3030}\u{303D}\u{3297}\u{3299}\u{1F1E6}-\u{1F1FF}\u{FE0F}\u{200D}\u{20E3}]/gu;
   function stripEmojiDom(root) {
     if (!root) return;
-    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode: function (t) {
+        // kód nechávame tak, ako je (emoji v string literáli / komentári neriešime)
+        return t.parentElement && t.parentElement.closest('pre,code')
+          ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT;
+      }
+    });
     var nodes = [], n;
     while ((n = w.nextNode())) if (EMOJI.test(n.nodeValue)) { EMOJI.lastIndex = 0; nodes.push(n); }
     nodes.forEach(function (t) {
