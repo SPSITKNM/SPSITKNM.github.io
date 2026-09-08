@@ -1,0 +1,442 @@
+/* ============================================================================
+   SPSITKNM · TERÉN — design system v3
+   Jediný zdroj tokenov a komponentov. Nasledovník design-system.css v2.0.
+   https://spsitknm.github.io/ds.css
+   Koncept: "terénna príručka informatiky" — kniha, nie dashboard.
+   ========================================================================= */
+
+/* ── 1 · Reset ───────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased;
+  font-family:var(--sans);font-size:15px;color:var(--ink);background:var(--bg)}
+img,svg,video{max-width:100%;display:block}
+button,input,select,textarea{font:inherit;color:inherit}
+ul,ol{list-style:none}
+table{border-collapse:collapse}
+a{color:var(--acc);text-decoration:none}
+[hidden]{display:none!important}
+
+/* ── 2 · Tokeny ──────────────────────────────────────────────────────────── */
+/* Plot (tmavá, ako plotrovaný výkres) je východisko. Papier (svetlá) prepisuje. */
+:root{
+  --bg:#0c0e10; --bg2:#121518; --bg3:#191d21; --bg4:#20252a;
+  --line:#262c32; --line2:#39424a;
+  --ink:#e9e7e1; --ink2:#a5acb4; --ink3:#767e86;
+  --pro:#818cf8; --pro-soft:#1a1c33;
+  --sxg:#22d3ee; --sxg-soft:#0f2830;
+  --oop:#a78bfa; --oop-soft:#211a35;
+  --warn:#f0b232; --ok:#4ade80; --err:#f87171;
+  --acc:var(--pro); --acc-soft:var(--pro-soft);
+
+  --sans:'IBM Plex Sans',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  --serif:'Newsreader',Georgia,'Times New Roman',serif;
+  --mono:'IBM Plex Mono',ui-monospace,'SF Mono',Menlo,Consolas,monospace;
+
+  --prose:19px;            /* dlhý text v čítačke */
+  --measure:66ch;          /* šírka riadku prózy */
+  --wrap:1180px;           /* max šírka layoutu */
+  --toc-w:230px;
+  --margin-w:190px;
+
+  --r-c:3px;               /* kontrola / drobný prvok */
+  --r-k:6px;               /* karta */
+  --sh:0 12px 32px rgba(0,0,0,.42);   /* len plávajúce vrstvy */
+
+  --t:120ms cubic-bezier(.2,.7,.3,1);
+  --t2:180ms cubic-bezier(.2,.7,.3,1);
+}
+@media (prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    --bg:#f6f3ec; --bg2:#fffdf8; --bg3:#efeade; --bg4:#e5dfd1;
+    --line:#ded6c6; --line2:#bcb2a0;
+    --ink:#17191a; --ink2:#4c5257; --ink3:#6f767c;
+    --pro:#4338ca; --pro-soft:#ecebfb;
+    --sxg:#0e7490; --sxg-soft:#e2f2f6;
+    --oop:#6d28d9; --oop-soft:#f0eafd;
+    --warn:#9a6100; --ok:#166534; --err:#b91c1c;
+    --sh:0 12px 32px rgba(35,25,10,.18);
+  }
+}
+:root[data-theme="light"]{
+  --bg:#f6f3ec; --bg2:#fffdf8; --bg3:#efeade; --bg4:#e5dfd1;
+  --line:#ded6c6; --line2:#bcb2a0;
+  --ink:#17191a; --ink2:#4c5257; --ink3:#6f767c;
+  --pro:#4338ca; --pro-soft:#ecebfb;
+  --sxg:#0e7490; --sxg-soft:#e2f2f6;
+  --oop:#6d28d9; --oop-soft:#f0eafd;
+  --warn:#9a6100; --ok:#166534; --err:#b91c1c;
+  --sh:0 12px 32px rgba(35,25,10,.18);
+}
+
+/* per-predmet akcent: nasadí sa na <body data-subject="pro"> alebo lokálny wrapper */
+[data-subject="pro"]{--acc:var(--pro);--acc-soft:var(--pro-soft)}
+[data-subject="sxg"]{--acc:var(--sxg);--acc-soft:var(--sxg-soft)}
+[data-subject="oop"]{--acc:var(--oop);--acc-soft:var(--oop-soft)}
+
+::selection{background:color-mix(in oklab,var(--acc) 26%,transparent);color:var(--ink)}
+::-webkit-scrollbar{width:9px;height:9px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--line2);border-radius:9px}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px;border-radius:var(--r-c)}
+a:hover{color:var(--ink)}
+a.lnk{border-bottom:1px solid color-mix(in oklab,var(--acc) 40%,transparent)}
+a.lnk:hover{border-bottom-color:var(--ink)}
+
+/* ── 3 · Layout ──────────────────────────────────────────────────────────── */
+.wrap{width:100%;max-width:var(--wrap);margin:0 auto;padding:0 24px}
+@media (max-width:640px){.wrap{padding:0 16px}}
+.stack>*+*{margin-top:var(--s,16px)}
+.between{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+/* ── 4 · Typo helpers ────────────────────────────────────────────────────── */
+.mono{font-family:var(--mono)}
+.serif{font-family:var(--serif)}
+.eyebrow{font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--ink3)}
+.display{font-family:var(--serif);font-weight:400;letter-spacing:-.02em;line-height:1.06;
+  font-size:clamp(30px,5vw,52px);text-wrap:balance}
+h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em;line-height:1.25}
+.lede{font-family:var(--serif);font-size:20px;line-height:1.62;color:var(--ink2);max-width:64ch}
+.muted{color:var(--ink3)}
+.i2{color:var(--ink2)}
+
+/* číslovaná sekcia so zarovnávacou linkou */
+.rule{display:flex;align-items:baseline;gap:14px;margin:0 0 26px}
+.rule .n{font-family:var(--mono);font-size:12px;color:var(--ink3);letter-spacing:.12em;flex:none}
+.rule h2,.rule h1{font-size:13px;letter-spacing:.2em;text-transform:uppercase;font-weight:600;color:var(--ink2);margin:0}
+.rule .bar{flex:1;height:1px;background:var(--line)}
+
+/* ── 5 · Tlačidlá, štítky ────────────────────────────────────────────────── */
+.btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:13px;
+  font-weight:500;padding:10px 15px;border-radius:var(--r-c);border:1px solid var(--line2);
+  background:var(--bg2);color:var(--ink);cursor:pointer;transition:border-color var(--t),background var(--t),color var(--t);
+  text-decoration:none}
+.btn:hover{border-color:var(--ink3);color:var(--ink)}
+.btn--solid{background:var(--ink);color:var(--bg);border-color:var(--ink);font-weight:600}
+.btn--solid:hover{background:var(--ink2);border-color:var(--ink2);color:var(--bg)}
+.btn--sm{font-size:11.5px;padding:6px 10px}
+.btn--acc{border-color:var(--acc);color:var(--acc)}
+.btn--acc:hover{background:var(--acc-soft)}
+.kbd{font-family:var(--mono);font-size:11px;border:1px solid var(--line2);border-radius:2px;
+  padding:1px 5px;color:var(--ink3)}
+.tag{display:inline-flex;align-items:center;font-family:var(--mono);font-size:10.5px;
+  letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border:1px solid var(--line);
+  border-radius:var(--r-c);color:var(--ink3);white-space:nowrap}
+.tag--acc{color:var(--acc);border-color:color-mix(in oklab,var(--acc) 45%,var(--line))}
+
+/* ── 6 · Hlavička stránky ────────────────────────────────────────────────── */
+.top{position:sticky;top:0;z-index:30;border-bottom:1px solid var(--line);background:var(--bg2)}
+.top__in{max-width:var(--wrap);margin:0 auto;padding:11px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;color:var(--ink);text-decoration:none;flex:none}
+.brand svg{width:26px;height:26px;flex:none}
+.brand b{font-family:var(--mono);font-weight:600;font-size:13px;letter-spacing:.04em}
+.top__year{font-family:var(--mono);font-size:11px;color:var(--ink3);letter-spacing:.1em}
+.top__nav{display:flex;gap:14px;font-size:13px;flex-wrap:wrap}
+.top__nav a{color:var(--ink2);text-decoration:none}
+.top__nav a:hover,.top__nav a[aria-current]{color:var(--ink)}
+.top__nav .n-pro[aria-current],.top__nav .n-pro:hover{color:var(--pro)}
+.top__nav .n-sxg[aria-current],.top__nav .n-sxg:hover{color:var(--sxg)}
+.top__nav .n-oop[aria-current],.top__nav .n-oop:hover{color:var(--oop)}
+.top__actions{margin-left:auto;display:flex;align-items:center;gap:8px}
+.crumb{display:flex;align-items:center;gap:9px;font-family:var(--mono);font-size:12px;color:var(--ink3);flex-wrap:wrap}
+.crumb a{color:var(--ink3);text-decoration:none}
+.crumb a:hover{color:var(--ink)}
+.crumb .here{color:var(--ink)}
+.crumb .s-pro{color:var(--pro)}.crumb .s-sxg{color:var(--sxg)}.crumb .s-oop{color:var(--oop)}
+
+.searchbtn{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;
+  padding:6px 10px;border:1px solid var(--line2);border-radius:var(--r-c);background:var(--bg);
+  color:var(--ink3);cursor:pointer}
+.searchbtn:hover{color:var(--ink);border-color:var(--ink3)}
+
+/* ── 7 · Sekcia ──────────────────────────────────────────────────────────── */
+.sec{max-width:var(--wrap);margin:0 auto;padding:56px 24px 8px}
+.sec--tight{padding:32px 24px 8px}
+.grid{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr))}
+.grid--sm{gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr))}
+
+/* ── 8 · Karta ───────────────────────────────────────────────────────────── */
+.card{border:1px solid var(--line);border-radius:var(--r-k);background:var(--bg2);padding:22px}
+.card--pad0{padding:0;overflow:hidden}
+
+/* ── 9 · Karta materiálu ─────────────────────────────────────────────────── */
+.doc{display:block;border:1px solid var(--line);border-left:3px solid var(--acc);
+  border-radius:var(--r-k);background:var(--bg2);padding:14px 16px;color:inherit;text-decoration:none;
+  transition:border-color var(--t),background var(--t)}
+.doc:hover{border-color:var(--line2);border-left-color:var(--acc);background:var(--bg3)}
+.doc__hd{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.doc__t{font-weight:600;font-size:15px;color:var(--ink)}
+.doc__mins{font-family:var(--mono);font-size:11px;color:var(--ink3);flex:none}
+.doc__d{font-family:var(--serif);font-size:15px;line-height:1.5;color:var(--ink2);margin-top:5px}
+.doc__meta{font-family:var(--mono);font-size:10.5px;color:var(--ink3);margin-top:9px;display:flex;gap:8px;flex-wrap:wrap}
+.doc__bar{margin-top:11px;height:2px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.doc__bar>i{display:block;height:100%;background:var(--acc)}
+.doc__tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.doc[data-new]::after{content:"";position:absolute;width:6px;height:6px;border-radius:50%;background:var(--acc);
+  margin-left:6px;transform:translateY(-6px)}
+.doc{position:relative}
+
+/* ── 10 · Kódový blok ────────────────────────────────────────────────────── */
+.code{border:1px solid var(--line);border-radius:var(--r-k);overflow:hidden;background:var(--bg);margin:0 0 22px;max-width:var(--measure)}
+.code__hd{display:flex;align-items:center;gap:10px;padding:7px 10px 7px 12px;border-bottom:1px solid var(--line);background:var(--bg3)}
+.code__lang{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-right:auto}
+.code pre{margin:0;padding:12px 14px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.7;color:var(--ink2);tab-size:2}
+.code pre code{font-family:inherit;background:none;padding:0;color:inherit;white-space:pre}
+.copy{cursor:pointer;font-family:var(--mono);font-size:11px;padding:4px 8px;border-radius:var(--r-c);
+  border:1px solid var(--line2);background:var(--bg2);color:var(--ink2)}
+.copy:hover{color:var(--ink);border-color:var(--ink3)}
+.copy[data-done]{color:var(--ok);border-color:color-mix(in oklab,var(--ok) 45%,var(--line))}
+
+/* ── 11 · Callout / poznámka ─────────────────────────────────────────────── */
+.callout{border:1px solid var(--line);border-left:3px solid var(--ink3);border-radius:var(--r-k);
+  background:var(--bg2);padding:12px 15px;margin:0 0 22px;max-width:var(--measure)}
+.callout__k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
+.callout__b{font-family:var(--serif);font-size:16.5px;line-height:1.55;color:var(--ink2)}
+.callout--note{border-left-color:var(--sxg)} .callout--note .callout__k{color:var(--sxg)}
+.callout--warn{border-left-color:var(--warn)} .callout--warn .callout__k{color:var(--warn)}
+.callout--exam{border-left-color:var(--warn)} .callout--exam .callout__k{color:var(--warn)}
+.callout--aside{border-left-color:var(--acc)} .callout--aside .callout__k{color:var(--acc)}
+.callout--aside .callout__b{font-style:italic}
+
+/* ── 12 · Deadline + aktuality ───────────────────────────────────────────── */
+.deadline{border:1px solid var(--warn);border-radius:var(--r-k);background:var(--bg2);padding:14px 16px;
+  display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.deadline__n{font-family:var(--mono);text-align:center;border:1px solid var(--warn);border-radius:var(--r-c);padding:6px 10px;flex:none}
+.deadline__n b{display:block;font-size:22px;font-weight:600;line-height:1;color:var(--warn)}
+.deadline__n span{display:block;font-size:9.5px;letter-spacing:.12em;color:var(--ink3);margin-top:3px}
+.deadline__t b{font-weight:600;font-size:14px}
+.deadline__t span{display:block;font-family:var(--mono);font-size:12px;color:var(--ink3)}
+.news{border:1px solid var(--line);border-radius:var(--r-k);background:var(--bg2);padding:16px}
+.news__hd{display:flex;gap:8px;align-items:baseline;margin-bottom:10px}
+.news__row{display:flex;gap:10px;font-size:13.5px;line-height:1.5;margin-top:8px}
+.news__row time{font-family:var(--mono);font-size:12px;color:var(--ink3);flex:none;width:52px}
+.news .prose{font-size:15px}
+
+/* ── 13 · Karta predmetu ─────────────────────────────────────────────────── */
+.subj{border:1px solid var(--line);border-top:3px solid var(--acc);border-radius:var(--r-k);
+  background:var(--bg2);padding:20px;display:block;color:inherit;text-decoration:none;
+  transition:border-color var(--t),background var(--t)}
+.subj:hover{border-color:var(--line2);background:var(--bg3)}
+.subj[data-s="pro"]{--acc:var(--pro)} .subj[data-s="sxg"]{--acc:var(--sxg)} .subj[data-s="oop"]{--acc:var(--oop)}
+.subj__hd{display:flex;justify-content:space-between;align-items:baseline}
+.subj__code{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:.1em;color:var(--acc)}
+.subj__n{font-family:var(--serif);font-size:24px;line-height:1.2;margin:8px 0}
+.subj__d{font-size:13.5px;line-height:1.55;color:var(--ink2);margin-bottom:14px}
+.subj__ft{margin-top:16px;padding-top:12px;border-top:1px solid var(--line);display:flex;
+  justify-content:space-between;align-items:center;font-family:var(--mono);font-size:11px;color:var(--ink3)}
+.subj__ft b{color:var(--acc);font-weight:500}
+
+/* ── 14 · Trate ──────────────────────────────────────────────────────────── */
+.track{border:1px solid var(--line);border-left:3px solid var(--acc);border-radius:var(--r-k);background:var(--bg2);padding:14px}
+.track b{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.track p{font-size:13px;line-height:1.5;color:var(--ink2)}
+.track .doc__bar{margin-top:10px}
+
+/* ── 15 · Kroky "Začni tu" ───────────────────────────────────────────────── */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));
+  border:1px solid var(--line);border-radius:var(--r-k);overflow:hidden}
+.step{padding:16px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2)}
+.step__k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;margin-bottom:8px}
+.step b{display:block;font-weight:600;font-size:14px;margin-bottom:5px}
+.step p{font-size:13px;line-height:1.5;color:var(--ink2)}
+.step p code{font-family:var(--mono);font-size:12px}
+
+/* ── 16 · Obsah (TOC) + čítačka ──────────────────────────────────────────── */
+.reader{display:grid;grid-template-columns:var(--toc-w) minmax(0,1fr) var(--margin-w);
+  max-width:calc(var(--wrap) + 40px);margin:0 auto}
+.toc{border-right:1px solid var(--line);padding:24px 18px;background:var(--bg2);
+  position:sticky;top:45px;align-self:start;max-height:calc(100vh - 45px);overflow-y:auto}
+.toc__k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin-bottom:12px}
+.toc a{display:block;padding:5px 8px;font-size:13px;line-height:1.4;color:var(--ink3);
+  border-left:2px solid transparent;text-decoration:none}
+.toc a:hover{color:var(--ink2)}
+.toc a.lv3{padding-left:20px;font-size:12.5px}
+.toc a[aria-current]{color:var(--acc);border-left-color:var(--acc);background:var(--acc-soft);font-weight:600}
+.toc__fig{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.toc__fig figcaption{font-family:var(--mono);font-size:10px;line-height:1.5;color:var(--ink3);margin-top:7px}
+
+.article{padding:34px 40px 64px;min-width:0}
+.article__hd{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--acc);margin-bottom:12px}
+.article__meta{font-family:var(--mono);font-size:11.5px;color:var(--ink3);display:flex;gap:14px;flex-wrap:wrap;
+  padding-bottom:20px;border-bottom:1px solid var(--line);margin-bottom:26px}
+
+.rail{border-left:1px solid var(--line);padding:24px 16px;background:var(--bg2);
+  position:sticky;top:45px;align-self:start;max-height:calc(100vh - 45px);overflow-y:auto}
+.rail__k{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink3);margin:0 0 8px}
+.rail__note{font-size:12.5px;line-height:1.55;color:var(--ink2);border-left:2px solid var(--line2);padding-left:10px;margin-bottom:16px}
+.rail a{display:block;font-size:12.5px;margin-bottom:6px}
+
+.prevnext{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:10px;
+  max-width:var(--measure);padding-top:22px;border-top:1px solid var(--line);margin-top:8px}
+.prevnext a{border:1px solid var(--line);border-radius:var(--r-k);padding:13px 15px;color:inherit;text-decoration:none}
+.prevnext a:hover{border-color:var(--line2)}
+.prevnext .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;margin-bottom:5px}
+.prevnext b{font-weight:600;font-size:14px}
+.prevnext .nx{text-align:right}
+
+@media (max-width:1040px){
+  .reader{grid-template-columns:1fr}
+  .toc{position:static;border-right:0;border-bottom:1px solid var(--line);max-height:none}
+  .toc[data-drawer]{display:none} .toc[data-drawer].open{display:block}
+  .rail{position:static;border-left:0;border-top:1px solid var(--line);max-height:none}
+  .article{padding:28px 22px 56px}
+}
+
+/* ── 17 · Próza (Newsreader dlhý text) ───────────────────────────────────── */
+.prose{color:var(--ink)}
+.prose>*{max-width:var(--measure)}
+.prose h1,.prose h2,.prose h3,.prose h4{font-family:var(--mono);letter-spacing:.03em;
+  text-transform:uppercase;color:var(--ink3);font-weight:600;line-height:1.35;
+  margin:34px 0 12px;scroll-margin-top:64px}
+.prose h1{font-size:14px;color:var(--ink2)}
+.prose h2{font-size:13px}
+.prose h3{font-size:12px}
+.prose h4{font-size:11.5px}
+.prose h2 .anchor,.prose h1 .anchor,.prose h3 .anchor{color:var(--acc);cursor:pointer;margin-right:8px;border:0}
+.prose h1.nohead,.prose h2.nohead,.prose h3.nohead{font-family:var(--mono);font-size:12.5px;text-transform:none;letter-spacing:0;font-weight:400;color:var(--ink3);margin:16px 0 4px}
+.prose p{font-family:var(--serif);font-size:var(--prose);line-height:1.65;margin:0 0 18px;text-wrap:pretty}
+.prose li{font-family:var(--serif);font-size:var(--prose);line-height:1.6;margin:0 0 8px}
+.prose ul,.prose ol{padding-left:22px;margin:0 0 18px}
+.prose ul>li{list-style:none;position:relative}
+.prose ul>li::before{content:"—";position:absolute;left:-18px;color:var(--ink3)}
+.prose ol{list-style:decimal;list-style-position:outside}
+.prose ol>li{padding-left:4px}
+.prose a{color:var(--acc);border-bottom:1px solid color-mix(in oklab,var(--acc) 40%,transparent)}
+.prose a:hover{color:var(--ink);border-bottom-color:var(--ink)}
+.prose strong{font-weight:600;color:var(--ink)}
+.prose em{font-style:italic}
+.prose code{font-family:var(--mono);font-size:.82em;background:var(--bg3);border:1px solid var(--line);
+  border-radius:4px;padding:1px 5px;color:var(--sxg)}
+.prose pre{border:1px solid var(--line);border-radius:var(--r-k);background:var(--bg);
+  padding:12px 14px;overflow-x:auto;margin:0 0 22px;font-family:var(--mono);font-size:13.5px;line-height:1.7}
+.prose pre code{background:none;border:0;padding:0;color:var(--ink2);font-size:inherit;white-space:pre}
+.prose blockquote{border-left:3px solid var(--acc);background:var(--acc-soft);border-radius:0 var(--r-c) var(--r-c) 0;
+  padding:12px 15px;margin:0 0 22px;font-family:var(--serif);color:var(--ink2)}
+.prose blockquote p{margin:0}
+.prose hr{border:0;border-top:1px solid var(--line);margin:32px 0}
+.prose table{width:100%;max-width:var(--measure);margin:0 0 22px;font-family:var(--sans);font-size:14px}
+.prose th{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line2);font-family:var(--mono);
+  font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink3);font-weight:500}
+.prose td{padding:9px 12px;border-bottom:1px solid var(--line);color:var(--ink2);vertical-align:top}
+.prose tr:last-child td{border-bottom:0}
+.prose img{border:1px solid var(--line);border-radius:var(--r-c);margin:0 0 22px}
+.prose :target{background:var(--acc-soft);outline:2px solid var(--acc);outline-offset:4px;border-radius:2px}
+
+/* Prism (token farby ladené na TERÉN) */
+.token.comment,.token.prolog,.token.doctype,.token.cdata{color:var(--ink3)}
+.token.punctuation{color:var(--ink3)}
+.token.keyword,.token.boolean,.token.operator,.token.tag{color:var(--oop)}
+.token.function,.token.class-name{color:var(--sxg)}
+.token.string,.token.char,.token.attr-value{color:var(--ok)}
+.token.number,.token.constant,.token.symbol{color:var(--warn)}
+.token.property,.token.attr-name,.token.builtin{color:var(--pro)}
+
+/* ── 18 · Pás progresu čítania ───────────────────────────────────────────── */
+.pbar{position:fixed;top:0;left:0;right:0;height:2px;background:transparent;z-index:40}
+.pbar>i{display:block;height:100%;width:0;background:var(--acc);transform-origin:left;transition:width var(--t)}
+@media (prefers-reduced-motion:reduce){.pbar>i{transition:none}}
+
+/* ── 19 · Command palette ────────────────────────────────────────────────── */
+.pal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:flex-start;
+  justify-content:center;padding:12vh 20px 20px;z-index:60}
+.pal{width:100%;max-width:620px;border:1px solid var(--line2);border-radius:var(--r-k);background:var(--bg2);
+  box-shadow:var(--sh);overflow:hidden;animation:rise .14s ease-out}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.pal{animation:none}}
+.pal__in{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.pal__in>span{font-family:var(--mono);color:var(--ink3);font-size:14px}
+.pal__in input{flex:1;min-width:0;background:transparent;border:0;outline:none;color:var(--ink);
+  font-family:var(--mono);font-size:14.5px}
+.pal__list{max-height:52vh;overflow-y:auto}
+.pal__opt{display:flex;gap:12px;align-items:baseline;padding:11px 16px;border-bottom:1px solid var(--line);
+  cursor:pointer;text-decoration:none;color:inherit}
+.pal__opt[aria-selected="true"],.pal__opt:hover{background:var(--bg3)}
+.pal__opt .sub{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;flex:none;width:38px}
+.pal__opt .sub.s-pro{color:var(--pro)}.pal__opt .sub.s-sxg{color:var(--sxg)}.pal__opt .sub.s-oop{color:var(--oop)}
+.pal__opt .ti{display:block;font-size:14px;font-weight:600}
+.pal__opt .sn{display:block;font-family:var(--serif);font-size:14.5px;line-height:1.45;color:var(--ink2);margin-top:2px}
+.pal__opt .fi{font-family:var(--mono);font-size:10.5px;color:var(--ink3);flex:none}
+.pal__empty{padding:22px 16px;font-family:var(--mono);font-size:13px;color:var(--ink3)}
+.pal__ft{display:flex;gap:16px;padding:10px 16px;border-top:1px solid var(--line);background:var(--bg3);
+  font-family:var(--mono);font-size:10.5px;color:var(--ink3);flex-wrap:wrap}
+@media (max-width:640px){
+  .pal-overlay{padding:0}
+  .pal{max-width:none;height:100%;border-radius:0;border:0}
+  .pal__list{max-height:none;flex:1}
+}
+
+/* ── 20 · Checklist + kruh ───────────────────────────────────────────────── */
+.ring{position:relative;width:104px;height:104px;flex:none}
+.ring svg{width:104px;height:104px;display:block}
+.ring circle{fill:none;stroke-width:8}
+.ring .bg{stroke:var(--bg4)}
+.ring .fg{stroke:var(--acc);stroke-linecap:butt;transition:stroke-dashoffset .5s var(--t)}
+@media (prefers-reduced-motion:reduce){.ring .fg{transition:none}}
+.ring__c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--mono);line-height:1}
+.ring__c b{font-size:24px;font-weight:600;color:var(--ink)}
+.ring__c span{font-size:11px;color:var(--ink3);margin-top:5px}
+.checklist{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:8px}
+.check{cursor:pointer;text-align:left;font-family:inherit;display:flex;gap:11px;align-items:flex-start;
+  padding:12px 14px;border-radius:var(--r-k);border:1px solid var(--line);background:var(--bg2);color:var(--ink);
+  transition:border-color var(--t),background var(--t)}
+.check:hover{border-color:var(--oop)}
+.check[aria-pressed="true"]{border-color:var(--oop);background:var(--oop-soft)}
+.check .box{flex:none;width:18px;height:18px;border-radius:3px;border:1px solid var(--line2);background:transparent;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;color:var(--bg);margin-top:1px}
+.check[aria-pressed="true"] .box{background:var(--oop);border-color:var(--oop)}
+.check .nm{display:block;font-weight:600;font-size:14px}
+.check .hi{display:block;font-family:var(--mono);font-size:11px;color:var(--ink3);margin-top:3px}
+
+/* ── 21 · Showcase ───────────────────────────────────────────────────────── */
+.showcard{border:1px solid var(--line);border-radius:var(--r-k);overflow:hidden;background:var(--bg2)}
+.showcard__cov{background:var(--bg3);border-bottom:1px solid var(--line);padding:16px}
+.showcard__cov svg{width:100%;height:auto}
+.showcard__b{padding:16px}
+.showcard__k{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.showcard__t{font-weight:600;font-size:15px;margin-bottom:5px}
+.showcard__d{font-size:13px;line-height:1.55;color:var(--ink2);margin-bottom:10px}
+.showcard__m{font-family:var(--mono);font-size:11px;color:var(--ink3)}
+
+/* ── 22 · Kresby: vrstevnice / graf ──────────────────────────────────────── */
+.contours{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.contours path{fill:none;stroke:var(--line);stroke-width:1}
+.contours path.hot{stroke:var(--acc);stroke-width:1.6}
+.hero{position:relative;border-bottom:1px solid var(--line);overflow:hidden}
+.hero .contours{opacity:.55}
+.hero__in{position:relative;padding:48px 24px 44px;max-width:var(--wrap);margin:0 auto}
+.news .prose{max-height:360px;overflow-y:auto;mask-image:linear-gradient(180deg,#000 88%,transparent)}
+
+/* ── 23 · Pätička + mobilná lišta ────────────────────────────────────────── */
+.foot{border-top:1px solid var(--line);margin-top:56px}
+.foot__in{max-width:var(--wrap);margin:0 auto;padding:28px 24px;display:flex;gap:16px;justify-content:space-between;flex-wrap:wrap;align-items:baseline}
+.foot a{color:var(--ink2)}
+.foot .mono{font-size:11px;color:var(--ink3);letter-spacing:.06em}
+.tabbar{display:none}
+@media (max-width:720px){
+  .tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:30;border-top:1px solid var(--line);
+    background:var(--bg2);font-family:var(--mono);font-size:10.5px;color:var(--ink3)}
+  .tabbar a{flex:1;padding:11px 0;text-align:center;color:var(--ink3);text-decoration:none;border-top:2px solid transparent;margin-top:-1px}
+  .tabbar a[aria-current]{color:var(--ink);border-top-color:var(--acc)}
+  body{padding-bottom:46px}
+}
+
+/* ── 24 · Skip link ──────────────────────────────────────────────────────── */
+.skip{position:absolute;left:-9999px;top:0;z-index:80;background:var(--ink);color:var(--bg);
+  padding:8px 12px;font-family:var(--mono);font-size:12px;border-radius:0 0 var(--r-c) 0}
+.skip:focus{left:0}
+
+/* ── 25 · Reduced motion + print ─────────────────────────────────────────── */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+@media print{
+  .top,.tabbar,.pbar,.rail,.toc,.searchbtn,.pal-overlay,[data-noprint]{display:none!important}
+  .reader{grid-template-columns:1fr}
+  body{background:#fff;color:#000}
+  .article{padding:0}
+  .prose pre,.code pre{white-space:pre-wrap;word-break:break-word;border:1px solid #ccc}
+  .prose a::after{content:" (" attr(href) ")";font-size:.8em;color:#555}
+  a{color:#000}
+}

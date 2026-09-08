@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Čítačka · SPSITKNM</title>
+<meta name="description" content="Skriptá, poznámky a zadania SPSITKNM čitateľné priamo tu — s obsahom, kotvami a kódom.">
+<script>try{var t=localStorage.getItem('teren-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<meta property="og:type" content="article">
+<meta property="og:image" content="https://spsitknm.github.io/assets/og-hub.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/ds.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
+<script src="/app.js"></script>
+</head>
+<body>
+<a href="#article" class="skip">Preskočiť na text</a>
+<div class="pbar" aria-hidden="true"><i></i></div>
+
+<header class="top">
+  <div class="top__in" style="padding-top:9px;padding-bottom:9px">
+    <a class="brand" href="/" aria-label="SPSITKNM — domov">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x=".5" y=".5" width="31" height="31" rx="3" fill="none" stroke="var(--line2)"/>
+        <path d="M3 24C8 21 11 25 16 22 21 19 24 23 29 20" fill="none" stroke="var(--pro)" stroke-width="1.4"/>
+        <path d="M3 19C8 16 11 20 16 17 21 14 24 18 29 15" fill="none" stroke="var(--sxg)" stroke-width="1.4"/>
+        <path d="M3 14C8 11 11 15 16 12 21 9 24 13 29 10" fill="none" stroke="var(--oop)" stroke-width="1.4"/></svg>
+    </a>
+    <nav class="crumb" aria-label="Omrvinky">
+      <a href="/">Hub</a><span>/</span>
+      <a data-crumb-subj href="/predmet.html">predmet</a><span>/</span>
+      <span class="here" data-crumb-doc>dokument</span>
+    </nav>
+    <div class="top__actions">
+      <button type="button" class="btn btn--sm" data-toc-toggle aria-label="Obsah dokumentu">
+        <svg class="ic" width="14" height="14"><use href="/assets/icons.svg#list"/></svg> Obsah
+      </button>
+      <button type="button" class="btn btn--sm" data-open-palette aria-label="Hľadať"><span class="kbd">⌘K</span></button>
+      <button type="button" class="btn btn--sm" data-mark-read aria-pressed="false">Označiť prečítané</button>
+      <button type="button" class="btn btn--sm" onclick="window.print()" aria-label="Tlačiť">
+        <svg class="ic" width="14" height="14"><use href="/assets/icons.svg#printer"/></svg>
+      </button>
+      <button type="button" class="btn btn--sm" data-theme-toggle>Téma</button>
+    </div>
+  </div>
+</header>
+
+<div class="reader">
+  <aside class="toc" data-drawer aria-label="Obsah dokumentu">
+    <div class="toc__k">Obsah <span data-toc-count></span></div>
+    <nav data-toc></nav>
+    <figure class="toc__fig" data-toc-fig hidden>
+      <div data-toc-contour></div>
+      <figcaption>Vrstevnica = sekcia. Zvýraznená je tá, v ktorej si.</figcaption>
+    </figure>
+  </aside>
+
+  <article class="article" id="article">
+    <p class="article__hd" data-a-hd>Načítavam…</p>
+    <h1 class="display" style="font-size:clamp(28px,3.6vw,42px)" data-a-title>&nbsp;</h1>
+    <div class="article__meta" data-a-meta></div>
+    <div class="prose" data-a-body>
+      <p class="muted">Načítavam dokument z GitHubu…</p>
+    </div>
+    <div class="prevnext" data-prevnext hidden></div>
+  </article>
+
+  <aside class="rail" aria-label="Na okraji">
+    <p class="rail__k">Zdroj</p>
+    <a class="lnk" data-src-link href="#">.md v repozitári ↗</a>
+    <div data-related-wrap hidden>
+      <p class="rail__k" style="margin-top:16px">Súvisí</p>
+      <div data-related></div>
+    </div>
+    <p class="mono" style="font-size:10px;line-height:1.55;color:var(--ink3);margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">Klik na § pri nadpise skopíruje odkaz na sekciu. Tlač skryje obsah aj okraj.</p>
+  </aside>
+</div>
+
+<nav class="tabbar" aria-label="Rýchla navigácia">
+  <a href="/">Hub</a>
+  <a data-tab-subj href="/predmet.html">Predmet</a>
+  <a href="#" data-toc-toggle>Obsah</a>
+</nav>
+
+<script>
+(function boot() {
+  if (!window.TEREN) { return setTimeout(boot, 20); }
+  var T = window.TEREN;
+  var qs = new URLSearchParams(location.search);
+  var s = qs.get('s') || 'pro', slug = qs.get('doc') || '';
+  if (!T.SUBJECTS[s]) s = 'pro';
+  document.body.setAttribute('data-subject', s);
+  document.body.setAttribute('data-slug', s + '/' + slug);
+  document.querySelector('[data-crumb-subj]').href = '/predmet.html?s=' + s;
+  document.querySelector('[data-crumb-subj]').className = 'lnk s-' + s;
+  document.querySelector('[data-tab-subj]').href = '/predmet.html?s=' + s;
+
+  function ready() { return typeof window.marked !== 'undefined' && typeof window.DOMPurify !== 'undefined'; }
+  function whenReady(cb) { ready() ? cb() : setTimeout(function () { whenReady(cb); }, 40); }
+
+  function slugify(t) {
+    return t.toLowerCase().trim()
+      .replace(/[áàä]/g, 'a').replace(/[éèě]/g, 'e').replace(/í/g, 'i').replace(/[óòô]/g, 'o')
+      .replace(/[úù]/g, 'u').replace(/ý/g, 'y').replace(/č/g, 'c').replace(/ď/g, 'd').replace(/ĺ/g, 'l')
+      .replace(/ľ/g, 'l').replace(/ň/g, 'n').replace(/ŕ/g, 'r').replace(/š/g, 's').replace(/ť/g, 't')
+      .replace(/ž/g, 'z').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'sekcia';
+  }
+
+  fetch('/content/' + s + '.json').then(function (r) { return r.json(); }).then(function (set) {
+    var docs = set.docs || [];
+    var doc = docs.filter(function (d) { return d.slug === slug; })[0];
+    if (!doc) { fail('Dokument „' + slug + '" nie je v zozname predmetu.'); return; }
+
+    document.title = doc.title + ' · ' + set.subject.name;
+    document.querySelector('[data-crumb-doc]').textContent = doc.file;
+    document.querySelector('[data-a-hd]').textContent = set.subject.name + ' · ' + (doc.kind || 'skriptá').toUpperCase() + (doc.lang && doc.lang.length ? ' · ' + doc.lang.join(', ').toUpperCase() : '');
+    document.querySelector('[data-a-title]').textContent = doc.title;
+    document.querySelector('[data-a-meta]').innerHTML =
+      '<span>' + (doc.words || 0).toLocaleString('sk-SK') + ' slov · ' + T.readingMins(doc.words || 0) + ' min čítania</span>' +
+      (doc.updated ? '<span>upravené ' + new Date(doc.updated).toLocaleDateString('sk-SK') + '</span>' : '') +
+      '<span><a class="lnk" href="https://github.com/SPSITKNM/' + set.subject.repo + '/blob/main/' + encodeURIComponent(doc.file) + '">zdroj v repe ↗</a></span>';
+    var srcUrl = 'https://github.com/SPSITKNM/' + set.subject.repo + '/blob/main/' + encodeURIComponent(doc.file);
+    document.querySelector('[data-src-link]').href = srcUrl;
+
+    // prev / next — v poradí trate, inak v poradí docs
+    var order = docs.map(function (d) { return d.slug; });
+    (set.tracks || []).forEach(function (tr) {
+      tr.docs.forEach(function (sl) { if (order.indexOf(sl) < 0) return; });
+    });
+    var flat = [];
+    if ((set.tracks || []).length) {
+      set.tracks.forEach(function (tr) { tr.docs.forEach(function (sl) { if (flat.indexOf(sl) < 0 && order.indexOf(sl) >= 0) flat.push(sl); }); });
+      order.forEach(function (sl) { if (flat.indexOf(sl) < 0) flat.push(sl); });
+    } else flat = order;
+    var i = flat.indexOf(slug);
+    var pn = document.querySelector('[data-prevnext]');
+    function card(sl, dir) {
+      var d = docs.filter(function (x) { return x.slug === sl; })[0]; if (!d) return '';
+      return '<a class="' + (dir === 'next' ? 'nx' : '') + '" href="/citacka.html?s=' + s + '&doc=' + sl + '">' +
+        '<div class="k">' + (dir === 'next' ? 'Ďalšie →' : '← Predošlé') + '</div><b>' + T.esc(d.title) + '</b></a>';
+    }
+    var html = '';
+    if (i > 0) html += card(flat[i - 1], 'prev');
+    if (i >= 0 && i < flat.length - 1) html += card(flat[i + 1], 'next');
+    if (html) { pn.innerHTML = html; pn.hidden = false; }
+
+    // related
+    if ((doc.related || []).length) {
+      Promise.all(doc.related.map(function (ref) {
+        var rs = ref.split('/')[0], rslug = (ref.split('/')[1] || '').split('#')[0], hash = ref.indexOf('#') >= 0 ? '#' + ref.split('#')[1] : '';
+        return fetch('/content/' + rs + '.json').then(function (r) { return r.json(); }).then(function (rset) {
+          var rd = (rset.docs || []).filter(function (x) { return x.slug === rslug; })[0];
+          return rd ? { s: rs, url: '/citacka.html?s=' + rs + '&doc=' + rslug + hash, title: rd.title } : null;
+        }).catch(function () { return null; });
+      })).then(function (list) {
+        list = list.filter(Boolean).filter(function (x, i, a) { return a.findIndex(function (y) { return y.url === x.url; }) === i; });
+        if (!list.length) return;
+        document.querySelector('[data-related-wrap]').hidden = false;
+        document.querySelector('[data-related]').innerHTML = list.map(function (x) {
+          return '<a class="lnk" style="color:var(--' + x.s + ')" href="' + x.url + '">' + T.esc(x.title) + '</a>';
+        }).join('');
+      });
+    }
+
+    // mark read
+    var mr = document.querySelector('[data-mark-read]');
+    if (T.isRead(s, slug)) { mr.setAttribute('aria-pressed', 'true'); mr.textContent = '✓ Prečítané'; }
+    mr.addEventListener('click', function () {
+      var on = T.toggleRead(s, slug);
+      mr.setAttribute('aria-pressed', on ? 'true' : 'false');
+      mr.textContent = on ? '✓ Prečítané' : 'Označiť prečítané';
+    });
+    T.markSeen(s, slug);
+
+    // fetch markdown
+    var url = T.RAW + '/' + set.subject.repo + '/main/' + doc.file.split('/').map(encodeURIComponent).join('/');
+    whenReady(function () {
+      fetch(url, { cache: 'default' }).then(function (r) { if (!r.ok) throw 0; return r.text(); })
+        .then(function (md) { render(md, doc, srcUrl); })
+        .catch(function () {
+          document.querySelector('[data-a-body]').innerHTML =
+            '<p class="i2" style="font-family:var(--sans);font-size:14px">Dokument sa teraz nedá načítať. Otvor ho priamo v repozitári: ' +
+            '<a class="lnk" href="' + srcUrl + '">' + T.esc(doc.file) + ' ↗</a></p>';
+        });
+    });
+  }).catch(function () { fail('Predmet sa nenačítal.'); });
+
+  function fail(msg) {
+    document.querySelector('[data-a-hd]').textContent = 'Chyba';
+    document.querySelector('[data-a-title]').textContent = 'Nedá sa zobraziť';
+    document.querySelector('[data-a-body]').innerHTML = '<p class="i2" style="font-family:var(--sans);font-size:14px">' + T.esc(msg) + ' Skús <a class="lnk" href="/">hub</a>.</p>';
+  }
+
+  var OK_TAGS = /^(a|abbr|b|blockquote|br|code|del|div|em|h[1-6]|hr|i|img|li|ol|p|pre|s|span|strong|sub|sup|table|tbody|td|th|thead|tr|ul)$/i;
+  function preClean(md) {
+    // v niektorých .md je C++ kód nezabalený vo fence a `<vector>` / `<iostream>` požerie DOMPurify.
+    // Escapneme uhlové zátvorky mimo fenced code, okrem povolených HTML značiek.
+    return md.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~)/).map(function (chunk, i) {
+      if (i % 2) return chunk; // fenced blok necháme tak
+      return chunk.replace(/<(\/?)([A-Za-z][\w-]*)((?:\s[^<>]*?)?)\s*(\/?)>/g, function (m, sl, tag) {
+        return OK_TAGS.test(tag) ? m : m.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      });
+    }).join('');
+  }
+
+  function render(md, doc, srcUrl) {
+    window.marked.setOptions({ gfm: true, breaks: false });
+    var dirty = window.marked.parse(preClean(md));
+    var clean = window.DOMPurify.sanitize(dirty, { ADD_ATTR: ['target', 'rel'] });
+    var body = document.querySelector('[data-a-body]');
+    body.innerHTML = clean;
+
+    // nadpisy → id + kotva §, TOC
+    var used = {}, toc = [];
+    body.querySelectorAll('h1,h2,h3').forEach(function (h) {
+      var txt = h.textContent.trim();
+      if (/^#?\s*include\b/i.test(txt) || /^[^\wáäčďéíĺľňóôŕšťúýž]+$/i.test(txt) || !txt) { h.classList.add('nohead'); return; }
+      var base = slugify(txt), id = base, k = 2;
+      while (used[id]) id = base + '-' + (k++);
+      used[id] = 1; h.id = id;
+      var lvl = +h.tagName[1];
+      var a = document.createElement('a');
+      a.href = '#' + id; a.className = 'anchor'; a.textContent = '§'; a.setAttribute('aria-label', 'Odkaz na sekciu ' + h.textContent);
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        var link = location.origin + location.pathname + location.search + '#' + id;
+        history.replaceState(null, '', '#' + id);
+        h.scrollIntoView();
+        if (navigator.clipboard) navigator.clipboard.writeText(link).catch(function () {});
+        var live = document.getElementById('teren-live'); if (live) live.textContent = 'Odkaz na sekciu skopírovaný';
+      });
+      h.insertBefore(a, h.firstChild);
+      toc.push({ id: id, lvl: lvl, text: h.textContent.replace(/^§\s*/, '') });
+    });
+
+    // TOC render — primárna úroveň = najplytšia s >1 výskytom
+    var counts = { 1: 0, 2: 0, 3: 0 }; toc.forEach(function (t) { counts[t.lvl]++; });
+    // primárna úroveň = tá s najviac položkami (pri veľa H2 nechceme H1-only strom)
+    var primary = counts[2] >= 2 && counts[2] >= counts[1] ? 2 : (counts[1] >= 2 ? 1 : (counts[2] >= 2 ? 2 : Math.min.apply(null, toc.map(function (t) { return t.lvl; }).concat([1]))));
+    var nav = document.querySelector('[data-toc]');
+    document.querySelector('[data-toc-count]').textContent = '· ' + toc.length + ' sekcií';
+    nav.innerHTML = toc.map(function (t) {
+      var cls = t.lvl > primary ? 'lv3' : '';
+      return '<a class="' + cls + '" href="#' + t.id + '" data-toc-id="' + t.id + '">' + T.esc(t.text) + '</a>';
+    }).join('');
+    nav.addEventListener('click', function (e) {
+      var a = e.target.closest('a'); if (!a) return;
+      var t = document.querySelector('.toc[data-drawer]'); if (t && innerWidth <= 1040) t.classList.remove('open');
+    });
+
+    // vrstevnicová kresba: 1 linka = 1 top-level nadpis
+    var tops = toc.filter(function (t) { return t.lvl === primary; });
+    if (tops.length >= 3) {
+      document.querySelector('[data-toc-fig]').hidden = false;
+      document.querySelector('[data-toc-contour]').innerHTML =
+        T.contourSVG(Math.min(tops.length, 12), 0, 180, 60).replace('class="contours"', 'style="width:100%;height:auto;display:block"');
+    }
+
+    // kódové bloky → hlavička + kopírovanie + Prism
+    body.querySelectorAll('pre').forEach(function (pre) {
+      var code = pre.querySelector('code');
+      var m = code && (code.className || '').match(/language-([\w-]+)/);
+      var lang = m ? m[1] : '';
+      var wrap = document.createElement('div'); wrap.className = 'code';
+      var hd = document.createElement('div'); hd.className = 'code__hd';
+      hd.innerHTML = '<span class="code__lang">' + (lang || 'text') + '</span>' +
+        '<button type="button" class="copy"><svg class="ic" width="12" height="12"><use href="/assets/icons.svg#copy"/></svg> kopírovať</button>';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(hd); wrap.appendChild(pre);
+    });
+    if (window.Prism) { try { window.Prism.highlightAllUnder(body); } catch (e) {} }
+
+    // GitHub-style callouts z blockquote
+    body.querySelectorAll('blockquote').forEach(function (bq) {
+      var first = bq.querySelector('p');
+      var mm = first && first.innerHTML.match(/^\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*(<br>)?/i);
+      if (!mm) return;
+      var kind = mm[1].toUpperCase();
+      var map = { NOTE: ['callout--note', 'Pozn.'], TIP: ['callout--note', 'Tip'], IMPORTANT: ['callout--aside', 'Dôležité'], WARNING: ['callout--warn', 'Pozor'], CAUTION: ['callout--warn', 'Pozor'] };
+      first.innerHTML = first.innerHTML.replace(mm[0], '');
+      var d = document.createElement('div'); d.className = 'callout ' + map[kind][0];
+      d.innerHTML = '<div class="callout__k">' + map[kind][1] + '</div><div class="callout__b">' + bq.innerHTML + '</div>';
+      bq.replaceWith(d);
+    });
+
+    // externé odkazy
+    body.querySelectorAll('a[href^="http"]').forEach(function (a) {
+      if (a.host !== location.host) { a.target = '_blank'; a.rel = 'noopener'; }
+    });
+
+    // scroll-spy
+    var links = {}; document.querySelectorAll('[data-toc-id]').forEach(function (a) { links[a.getAttribute('data-toc-id')] = a; });
+    var io = new IntersectionObserver(function (ents) {
+      ents.forEach(function (en) {
+        if (!en.isIntersecting) return;
+        Object.keys(links).forEach(function (k) { links[k].removeAttribute('aria-current'); });
+        var a = links[en.target.id]; if (a) { a.setAttribute('aria-current', 'true'); a.scrollIntoView({ block: 'nearest' }); }
+      });
+    }, { rootMargin: '-64px 0px -70% 0px' });
+    body.querySelectorAll('h1,h2,h3').forEach(function (h) { io.observe(h); });
+
+    // obnova pozície
+    var saved = parseFloat(T.ls.get('pos:' + s + '/' + slug, '0'));
+    if (!location.hash && saved > 0.04 && saved < 0.95) {
+      requestAnimationFrame(function () {
+        var d = document.documentElement;
+        d.scrollTop = saved * (d.scrollHeight - d.clientHeight);
+        var chip = document.createElement('button');
+        chip.type = 'button'; chip.className = 'btn btn--sm';
+        chip.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:20px;z-index:35';
+        chip.textContent = 'Pokračuješ, kde si skončil · na začiatok';
+        chip.addEventListener('click', function () { scrollTo({ top: 0 }); chip.remove(); });
+        document.body.appendChild(chip);
+        setTimeout(function () { chip.remove(); }, 6000);
+      });
+    } else if (location.hash) {
+      var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView();
+    }
+  }
+})();
+</script>
+</body>
+</html>

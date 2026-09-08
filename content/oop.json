@@ -1,0 +1,35 @@
+{
+  "subject": {
+    "id": "oop",
+    "name": "Opakovanie OOP",
+    "accent": "oop",
+    "repo": "oop_opakovanie",
+    "lede": "Teória OOP s C++ príkladmi a checklist dvanástich tém — s vlastným progresom pred komisionálnou skúškou.",
+    "deadline": null
+  },
+  "tracks": [],
+  "docs": [
+    {
+      "slug": "oop-opakovanie", "file": "oop_opakovanie.md",
+      "title": "Opakovanie OOP — teória a príklady",
+      "desc": "Modularita a jej kritériá, faktory kvality softvéru, trieda vs objekt, deklarácia a definícia triedy, KeyValue a Account triedy v C++.",
+      "kind": "skripta", "lang": ["cpp", "cs"], "words": 9146, "updated": "2026-05-05",
+      "headings": ["Modularita", "Päť kritérií modularity", "Faktory kvality softvéru", "Trieda vs objekt", "Deklarácia triedy", "Definícia triedy", "KeyValue class v C++", "Account class", "Dedičnosť a CreditAccount"],
+      "related": ["pro/algoritmizacia", "pro/komisionalna-skuska", "pro/poznamky"]
+    }
+  ],
+  "topics": [
+    { "id": "class",      "name": "Triedy a objekty",     "hint": "trieda = predpis, objekt = kus pamäti",     "anchor": "trieda-vs-objekt" },
+    { "id": "encap",      "name": "Enkapsulácia",          "hint": "private/protected, gettery, invariant",     "anchor": "zapuzdrenie" },
+    { "id": "inherit",    "name": "Dedičnosť",             "hint": "is-a, protected, poradie konštruktorov",    "anchor": "dedicnost" },
+    { "id": "virtual",    "name": "Virtual a override",    "hint": "vtable, virtuálny deštruktor",              "anchor": "virtual-override" },
+    { "id": "poly",       "name": "Polymorfizmus",         "hint": "jedno rozhranie, viac chovaní",             "anchor": "polymorfizmus" },
+    { "id": "abstract",   "name": "Abstraktné triedy",     "hint": "pure virtual, nedá sa inštanciovať",        "anchor": "abstraktne-triedy" },
+    { "id": "iface",      "name": "Interfejsy",            "hint": "kontrakt bez implementácie",                "anchor": "interfejsy" },
+    { "id": "bigo",       "name": "Big O",                 "hint": "rast, nie sekundy",                         "anchor": "big-o" },
+    { "id": "memory",     "name": "Pamäťový model",        "hint": "stack vs heap, kto uvoľňuje",               "anchor": "pamatovy-model" },
+    { "id": "types",      "name": "Dátové typy",           "hint": "veľkosť, rozsah, pretečenie",               "anchor": "datove-typy" },
+    { "id": "static",     "name": "Statické členy",        "hint": "patria triede, nie objektu",                "anchor": "staticke-cleny" },
+    { "id": "exceptions", "name": "Výnimky",               "hint": "try/catch, RAII, čo nechytať",              "anchor": "vynimky" }
+  ]
+}
