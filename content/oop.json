@@ -1,0 +1,35 @@
+{
+  "subject": {
+    "id": "oop",
+    "name": "Opakovanie OOP",
+    "accent": "oop",
+    "repo": "oop_opakovanie",
+    "lede": "Teória OOP s C++ príkladmi a checklist dvanástich tém — s vlastným progresom pred komisionálnou skúškou.",
+    "deadline": null
+  },
+  "tracks": [],
+  "docs": [
+    {
+      "slug": "oop-opakovanie", "file": "oop_opakovanie.md",
+      "title": "Opakovanie OOP — teória a príklady",
+      "desc": "Modularita a jej kritériá, faktory kvality softvéru, trieda vs objekt, deklarácia a definícia triedy, KeyValue a Account triedy v C++.",
+      "kind": "skripta", "lang": ["cpp", "cs"], "words": 9146, "updated": "2026-05-05",
+      "headings": ["Modularita", "Päť kritérií modularity", "Faktory kvality softvéru", "Trieda vs objekt", "Deklarácia triedy", "Definícia triedy", "KeyValue class v C++", "Account class", "Dedičnosť a CreditAccount"],
+      "related": ["pro/algoritmizacia", "pro/komisionalna-skuska", "pro/poznamky"]
+    }
+  ],
+  "topics": [
+    { "id": "class",      "name": "Triedy a objekty",     "hint": "trieda = predpis, objekt = kus pamäti",     "ref": "oop/oop-opakovanie#trieda-vs-objekt" },
+    { "id": "encap",      "name": "Enkapsulácia",          "hint": "private/protected, skrývanie informácií",   "ref": "oop/oop-opakovanie#zapuzdrenie" },
+    { "id": "inherit",    "name": "Dedičnosť",             "hint": "is-a, generalizácia, Liskov",               "ref": "oop/oop-opakovanie#dedicnost-zakladny-princip" },
+    { "id": "virtual",    "name": "Prekrytie a preťaženie", "hint": "override vs overload, zmena správania",     "ref": "oop/oop-opakovanie#prekrytie" },
+    { "id": "poly",       "name": "Polymorfizmus",         "hint": "dynamická väzba, jedno rozhranie",          "ref": "oop/oop-opakovanie#polymorfizmus-a-dynamicka-vazba" },
+    { "id": "design",     "name": "Objektový návrh",       "hint": "stav a správanie, dekompozícia",            "ref": "oop/oop-opakovanie#objektovy-navrh" },
+    { "id": "iface",      "name": "Explicitné rozhranie",  "hint": "kontrakt medzi modulmi",                    "ref": "oop/oop-opakovanie#explicitne-rozhranie" },
+    { "id": "static",     "name": "Trieda bez objektov",   "hint": "statické členy, trieda ako objekt",         "ref": "oop/oop-opakovanie#trieda-bez-objektov" },
+    { "id": "memory",     "name": "Správa pamäte",         "hint": "stack vs heap, garbage collection",         "ref": "oop/oop-opakovanie#sprava-pamate-a-garbage-collection" },
+    { "id": "types",      "name": "Typová kontrola",       "hint": "statická väzba, kontrola typov",            "ref": "oop/oop-opakovanie#staticka-vazba-a-kontrola-typov" },
+    { "id": "bigo",       "name": "Big O",                 "hint": "asymptotická zložitosť — v PRO skriptách",  "ref": "pro/algoritmizacia" },
+    { "id": "exam",       "name": "Rozsah skúšky",         "hint": "čo presne sa pýtam a ako sa hodnotí",       "ref": "pro/komisionalna-skuska" }
+  ]
+}

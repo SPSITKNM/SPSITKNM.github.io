@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Predmet · SPSITKNM</title>
+<meta name="description" content="Materiály predmetu — skriptá, zadania, cheat-sheety a trate učiva.">
+<script>try{var t=localStorage.getItem('teren-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}
+(function(){var s=new URLSearchParams(location.search).get('s');if(s==='oop')location.replace('/oop.html');})();</script>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://spsitknm.github.io/assets/og-hub.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/ds.css">
+<script src="/app.js"></script>
+</head>
+<body>
+<a href="#main" class="skip">Preskočiť na obsah</a>
+
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="/" aria-label="SPSITKNM — domov">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x=".5" y=".5" width="31" height="31" rx="3" fill="none" stroke="var(--line2)"/>
+        <path d="M3 24C8 21 11 25 16 22 21 19 24 23 29 20" fill="none" stroke="var(--pro)" stroke-width="1.4"/>
+        <path d="M3 19C8 16 11 20 16 17 21 14 24 18 29 15" fill="none" stroke="var(--sxg)" stroke-width="1.4"/>
+        <path d="M3 14C8 11 11 15 16 12 21 9 24 13 29 10" fill="none" stroke="var(--oop)" stroke-width="1.4"/></svg>
+      <b>SPSITKNM</b>
+    </a>
+    <nav class="crumb" aria-label="Omrvinky"><a href="/">Hub</a><span>/</span><span class="here" data-crumb>predmet</span></nav>
+    <div class="top__actions">
+      <button type="button" class="searchbtn" data-open-palette aria-label="Hľadať v obsahu">
+        <svg class="ic" width="14" height="14"><use href="/assets/icons.svg#search"/></svg> Hľadať <span class="kbd">⌘K</span>
+      </button>
+      <button type="button" class="btn btn--sm" data-theme-toggle>Téma</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+  <section class="sec" style="padding-top:40px">
+    <div style="display:flex;gap:28px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:260px">
+        <p class="eyebrow" data-subj-eyebrow style="margin-bottom:10px">PREDMET</p>
+        <h1 class="display" style="font-size:clamp(28px,4.4vw,42px)" data-subj-name>—</h1>
+        <p class="lede" style="max-width:52ch;margin-top:10px" data-subj-lede></p>
+      </div>
+      <div class="deadline" data-deadline hidden>
+        <div class="deadline__n"><b data-dl-days>—</b><span>DNÍ</span></div>
+        <div class="deadline__t"><b data-dl-title>—</b><span data-dl-date>—</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec sec--tight" data-tracks-wrap hidden>
+    <div class="rule"><span class="n">01</span><h2>Trate — čo za sebou nasleduje</h2><span class="bar"></span></div>
+    <div class="grid--sm" style="display:grid" data-tracks></div>
+    <p class="mono" style="font-size:10.5px;color:var(--ink3);margin-top:12px">Percentá = podiel dokumentov trate označených ako prečítané v tomto prehliadači.</p>
+  </section>
+
+  <section class="sec sec--tight">
+    <div class="rule"><span class="n" data-mat-n>02</span><h2>Materiály</h2><span class="bar"></span></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px" data-filters>
+      <button type="button" class="tag tag--acc" data-filter="all" aria-pressed="true">všetko</button>
+      <button type="button" class="tag" data-filter="skripta" aria-pressed="false">skriptá</button>
+      <button type="button" class="tag" data-filter="zadanie" aria-pressed="false">zadania</button>
+      <button type="button" class="tag" data-filter="referencie" aria-pressed="false">referencie</button>
+    </div>
+    <div class="grid--sm" style="display:grid" data-docs></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="foot__in">
+    <p class="mono">Non scholae, sed vitae discimus</p>
+    <div style="display:flex;gap:14px;font-size:13px">
+      <a class="lnk" data-repo-link href="https://github.com/SPSITKNM">Repozitár ↗</a>
+      <a class="lnk" href="/">Hub</a>
+    </div>
+  </div>
+</footer>
+
+<nav class="tabbar" aria-label="Rýchla navigácia">
+  <a href="/">Hub</a>
+  <a href="/predmet.html?s=pro" data-tab="pro">PRO</a>
+  <a href="/predmet.html?s=sxg" data-tab="sxg">SXG</a>
+  <a href="/oop.html">OOP</a>
+</nav>
+
+<script>
+(function boot() {
+  if (!window.TEREN) { return setTimeout(boot, 20); }
+  var T = window.TEREN;
+  var s = new URLSearchParams(location.search).get('s') || 'pro';
+  if (!T.SUBJECTS[s]) s = 'pro';
+  document.body.setAttribute('data-subject', s);
+  var tab = document.querySelector('[data-tab="' + s + '"]'); if (tab) tab.setAttribute('aria-current', 'page');
+  var KIND_GROUP = { skripta: 'skripta', zadanie: 'zadanie', rozsah: 'referencie', sablona: 'referencie', cheatsheet: 'referencie' };
+  var KIND_LABEL = { skripta: 'skriptá', zadanie: 'zadanie', rozsah: 'rozsah skúšky', sablona: 'šablóna', cheatsheet: 'cheat-sheet' };
+
+  fetch('/content/' + s + '.json').then(function (r) { return r.json(); }).then(function (set) {
+    var sub = set.subject;
+    document.title = sub.name + ' · SPSITKNM';
+    document.querySelector('[data-crumb]').textContent = sub.name;
+    document.querySelector('[data-crumb]').className = 'here s-' + s;
+    document.querySelector('[data-subj-eyebrow]').textContent = 'PREDMET · ' + ({ pro: 'INDIGO', sxg: 'CYAN', oop: 'VIOLET' }[s]);
+    document.querySelector('[data-subj-name]').textContent = sub.name;
+    document.querySelector('[data-subj-lede]').textContent = sub.lede || '';
+    document.querySelector('[data-repo-link]').href = 'https://github.com/SPSITKNM/' + sub.repo;
+
+    var docs = set.docs || [];
+    var bySlug = {}; docs.forEach(function (d) { bySlug[d.slug] = d; });
+
+    // deadline
+    if (sub.deadline) {
+      var days = Math.ceil((Date.parse(sub.deadline) - Date.now()) / 864e5);
+      if (days > 0) {
+        var dl = document.querySelector('[data-deadline]'); dl.hidden = false;
+        dl.querySelector('[data-dl-days]').textContent = days;
+        dl.querySelector('[data-dl-title]').textContent = sub.deadlineTitle || 'Najbližší deadline';
+        dl.querySelector('[data-dl-date]').textContent = new Date(sub.deadline).toLocaleDateString('sk-SK');
+      }
+    }
+
+    // trate
+    var tw = document.querySelector('[data-tracks-wrap]'), tc = document.querySelector('[data-tracks]');
+    if ((set.tracks || []).length) {
+      tw.hidden = false;
+      tc.innerHTML = set.tracks.map(function (tr) {
+        var got = tr.docs.filter(function (sl) { return T.isRead(s, sl); }).length;
+        var pct = tr.docs.length ? Math.round(got / tr.docs.length * 100) : 0;
+        var links = tr.docs.map(function (sl) {
+          var d = bySlug[sl]; return d ? '<a class="lnk" href="/citacka.html?s=' + s + '&doc=' + sl + '">' + T.esc(d.file) + '</a>' : sl;
+        }).join(' · ');
+        return '<div class="track"><b>' + T.esc(tr.name) + '</b><p>' + links + '</p>' +
+          '<div class="doc__bar"><i style="width:' + pct + '%"></i></div>' +
+          '<p class="mono" style="font-size:10.5px;color:var(--ink3);margin-top:6px">' + got + ' / ' + tr.docs.length + ' prečítané</p></div>';
+      }).join('');
+    }
+    document.querySelector('[data-mat-n]').textContent = (set.tracks || []).length ? '02' : '01';
+
+    // materiály
+    var wrap = document.querySelector('[data-docs]');
+    function render(filter) {
+      wrap.innerHTML = docs.filter(function (d) {
+        return filter === 'all' || KIND_GROUP[d.kind || 'skripta'] === filter;
+      }).map(function (d) {
+        var mins = T.readingMins(d.words || 0);
+        var read = T.isRead(s, d.slug);
+        var tags = (d.lang || []).map(function (l) { return '<span class="tag">' + l + '</span>'; }).join('') +
+          '<span class="tag">' + (KIND_LABEL[d.kind] || d.kind || '') + '</span>' +
+          (read ? '<span class="tag tag--acc">✓ prečítané</span>' : '');
+        return '<a class="doc" href="/citacka.html?s=' + s + '&doc=' + d.slug + '"' + (T.isNew(d.updated) ? ' data-new' : '') + '>' +
+          '<div class="doc__hd"><span class="doc__t">' + T.esc(d.title) + '</span><span class="doc__mins">' + mins + ' min</span></div>' +
+          '<div class="doc__d">' + T.esc(d.desc || '') + '</div>' +
+          '<div class="doc__tags">' + tags + '</div>' +
+          '<div class="doc__meta"><span>' + (d.words || 0).toLocaleString('sk-SK') + ' slov</span><span>' + (d.headings || []).length + ' sekcií</span></div>' +
+          '</a>';
+      }).join('') || '<p class="muted" style="font-size:13px">Žiadny materiál v tejto kategórii.</p>';
+    }
+    render('all');
+    document.querySelectorAll('[data-filter]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        document.querySelectorAll('[data-filter]').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); x.classList.remove('tag--acc'); });
+        b.setAttribute('aria-pressed', 'true'); b.classList.add('tag--acc');
+        render(b.getAttribute('data-filter'));
+      });
+    });
+  }).catch(function () {
+    document.querySelector('[data-subj-name]').textContent = 'Predmet sa nenačítal';
+    document.querySelector('[data-subj-lede]').innerHTML = 'Skús <a class="lnk" href="/">hub</a> alebo obnov stránku.';
+  });
+})();
+</script>
+</body>
+</html>

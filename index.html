@@ -1,799 +1,210 @@
 <!DOCTYPE html>
-<html lang="sk" data-theme="dark">
+<html lang="sk">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SPSITKNM — Výučbový Hub</title>
-  <meta name="description" content="Výučbový hub pre predmety PRO a SXG na SPSITKNM. Materiály, skripty a projekty k predmetom." />
-  <meta name="theme-color" content="#050a14" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Fira+Code:wght@400;500&display=swap" />
-  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-<style>
-/* ── Reset ─────────────────────────────────────────────── */
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
-body{min-height:100vh;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-img,video,svg{max-width:100%;display:block}
-button,input{font:inherit}
-a{color:inherit;text-decoration:none}
-ul,ol{list-style:none}
-
-/* ── Tokens ────────────────────────────────────────────── */
-:root{
-  --bg:#050a14;--bg-s1:#0d1829;--bg-s2:#162236;--bg-s3:#1e3147;
-  --b1:rgba(99,102,241,.10);--b2:rgba(99,102,241,.26);--b3:rgba(99,102,241,.55);
-  --t1:#e8f0fe;--t2:#8fa3c0;--t3:#4d6480;
-  --indigo:#6366f1;--indigo-d:#4f46e5;
-  --cyan:#06b6d4;--violet:#8b5cf6;
-  --emerald:#10b981;--amber:#f59e0b;
-  --font-sans:'Inter',system-ui,sans-serif;
-  --font-mono:'Fira Code',monospace;
-  --nav-h:64px;--max-w:1200px;
-  --t-fast:150ms cubic-bezier(.4,0,.2,1);
-  --t-base:250ms cubic-bezier(.4,0,.2,1);
-  --t-slow:400ms cubic-bezier(.4,0,.2,1);
-  --t-spring:500ms cubic-bezier(.34,1.56,.64,1);
-  --r-sm:6px;--r-md:10px;--r-lg:16px;--r-xl:24px;--r-full:9999px;
-}
-[data-theme="light"]{
-  --bg:#f0f4ff;--bg-s1:#fff;--bg-s2:#f1f5f9;--bg-s3:#e2e8f0;
-  --b1:rgba(99,102,241,.07);--b2:rgba(99,102,241,.18);--b3:rgba(99,102,241,.4);
-  --t1:#0a0f1e;--t2:#4a5568;--t3:#94a3b8;
-}
-
-/* ── Base ──────────────────────────────────────────────── */
-body{font-family:var(--font-sans);font-size:.95rem;color:var(--t1);background:var(--bg);}
-::selection{background:rgba(99,102,241,.28);color:var(--t1)}
-::-webkit-scrollbar{width:5px}
-::-webkit-scrollbar-track{background:var(--bg)}
-::-webkit-scrollbar-thumb{background:var(--b3);border-radius:9999px}
-::-webkit-scrollbar-thumb:hover{background:var(--indigo)}
-:focus-visible{outline:2px solid var(--indigo);outline-offset:3px;border-radius:var(--r-sm)}
-
-.container{width:100%;max-width:var(--max-w);margin:0 auto;padding:0 1.5rem}
-@media(max-width:640px){.container{padding:0 1rem}}
-
-/* ── BG Mesh ───────────────────────────────────────────── */
-.bg-mesh{
-  position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:
-    radial-gradient(ellipse 70% 60% at 10% 10%,rgba(79,70,229,.18) 0%,transparent 65%),
-    radial-gradient(ellipse 60% 50% at 90% 80%,rgba(6,182,212,.14) 0%,transparent 65%),
-    radial-gradient(ellipse 50% 45% at 50% 110%,rgba(139,92,246,.12) 0%,transparent 65%),
-    var(--bg);
-  animation:mesh-breathe 20s ease-in-out infinite;
-}
-@keyframes mesh-breathe{
-  0%,100%{filter:hue-rotate(0deg) brightness(1)}
-  50%{filter:hue-rotate(10deg) brightness(1.03)}
-}
-[data-theme="light"] .bg-mesh{
-  background:
-    radial-gradient(ellipse 70% 60% at 10% 10%,rgba(99,102,241,.08) 0%,transparent 65%),
-    radial-gradient(ellipse 60% 50% at 90% 80%,rgba(6,182,212,.06) 0%,transparent 65%),
-    var(--bg);
-  animation:none;
-}
-main{position:relative;z-index:1}
-
-/* ── Nav ───────────────────────────────────────────────── */
-.nav{
-  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
-  background:rgba(5,10,20,.82);
-  backdrop-filter:blur(24px) saturate(180%);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
-  border-bottom:1px solid var(--b1);z-index:100;
-  transition:background var(--t-base),border-color var(--t-base);
-}
-[data-theme="light"] .nav{background:rgba(240,244,255,.88)}
-.nav-inner{display:flex;align-items:center;justify-content:space-between;height:100%;gap:1rem}
-.nav-logo{font-weight:800;font-size:1.1rem;letter-spacing:-.02em;color:var(--t1);display:flex;align-items:center;gap:.5rem;transition:color var(--t-fast)}
-.nav-logo:hover{color:var(--indigo)}
-.logo-dot{color:var(--indigo)}
-.nav-links{display:flex;align-items:center;gap:.25rem}
-.nav-link{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem .7rem;border-radius:var(--r-md);color:var(--t2);font-size:.82rem;font-weight:500;transition:color var(--t-fast),background var(--t-fast)}
-.nav-link:hover{color:var(--t1);background:var(--bg-s2)}
-.nav-actions{display:flex;align-items:center;gap:.5rem}
-.icon-btn{display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:var(--r-md);background:var(--bg-s2);border:1px solid var(--b1);color:var(--t2);cursor:pointer;transition:all var(--t-fast)}
-.icon-btn:hover{color:var(--t1);border-color:var(--b2)}
-[data-theme="light"] .icon-btn .sun-icon{display:none}
-[data-theme="dark"] .icon-btn .moon-icon{display:none}
-.hamburger{display:none;flex-direction:column;justify-content:center;align-items:center;gap:5px;width:36px;height:36px;border-radius:var(--r-md);background:var(--bg-s2);border:1px solid var(--b1);cursor:pointer;padding:0}
-.hamburger span{display:block;width:18px;height:1.5px;background:var(--t2);border-radius:2px;transition:transform var(--t-base),opacity var(--t-base)}
-.hamburger.open span:nth-child(1){transform:translateY(6.5px) rotate(45deg)}
-.hamburger.open span:nth-child(2){opacity:0}
-.hamburger.open span:nth-child(3){transform:translateY(-6.5px) rotate(-45deg)}
-.nav-drawer{display:none;position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;background:var(--bg);border-top:1px solid var(--b1);flex-direction:column;padding:1.5rem;gap:.5rem;z-index:99;overflow-y:auto}
-.nav-drawer.open{display:flex}
-.nav-drawer .nav-link{padding:.75rem 1rem;font-size:.95rem;border:1px solid var(--b1);background:var(--bg-s1);border-radius:var(--r-lg)}
-@media(max-width:768px){.hamburger{display:flex}.nav-links{display:none}}
-
-/* ── Hero ──────────────────────────────────────────────── */
-.hero{padding-top:calc(var(--nav-h) + 6rem);padding-bottom:5rem;text-align:center}
-.hero-eyebrow{
-  display:inline-flex;align-items:center;gap:.5rem;
-  padding:4px 1rem;border-radius:9999px;
-  background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.20);
-  font-size:.82rem;font-weight:600;color:var(--indigo);
-  margin-bottom:1.5rem;letter-spacing:.02em;
-}
-.hero-title{
-  font-size:clamp(3.5rem,10vw,8rem);font-weight:900;
-  letter-spacing:-.05em;line-height:.95;
-  margin-bottom:1.5rem;
-}
-.grad-text{
-  background:linear-gradient(135deg,#e8f0fe 0%,var(--indigo) 40%,var(--cyan) 70%,#e8f0fe 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  background-size:200% 200%;animation:grad-shift 6s ease-in-out infinite;
-}
-@keyframes grad-shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
-
-/* Glitch */
-.glitch{position:relative;display:inline-block}
-.glitch::before,.glitch::after{
-  content:attr(data-text);position:absolute;inset:0;
-  background:linear-gradient(135deg,#e8f0fe 0%,var(--indigo) 40%,var(--cyan) 70%,#e8f0fe 100%);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  background-size:200% 200%;
-}
-.glitch::before{clip-path:polygon(0 0,100% 0,100% 33%,0 33%);transform:translateX(-2px);animation:glitch-a 5s infinite}
-.glitch::after{clip-path:polygon(0 67%,100% 67%,100% 100%,0 100%);transform:translateX(2px);animation:glitch-b 5s infinite}
-@keyframes glitch-a{0%,80%,100%{opacity:0}82%,86%,90%{opacity:1;transform:translateX(-2px)}84%,88%{transform:translateX(1px)}}
-@keyframes glitch-b{0%,82%,100%{opacity:0}84%,88%,92%{opacity:1;transform:translateX(2px)}86%,90%{transform:translateX(-1px)}}
-
-.hero-sub{font-size:clamp(1rem,3vw,1.4rem);color:var(--t2);margin-bottom:2rem;line-height:1.6}
-.typewriter-wrap{height:2em;display:flex;align-items:center;justify-content:center;gap:.5rem}
-.tw-label{color:var(--t3);font-size:.82rem;font-family:var(--font-mono)}
-#typewriter{color:var(--indigo);font-weight:600}
-.tw-cursor{display:inline-block;width:2px;height:1.2em;background:var(--indigo);border-radius:1px;animation:blink .8s infinite}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-
-.hero-actions{display:flex;align-items:center;justify-content:center;gap:.75rem;flex-wrap:wrap;margin-top:2.5rem}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.75rem 1.5rem;border-radius:var(--r-md);font-size:.82rem;font-weight:600;cursor:pointer;border:none;transition:all var(--t-fast);white-space:nowrap;text-decoration:none}
-.btn-primary{background:var(--indigo);color:#fff;box-shadow:0 4px 16px rgba(99,102,241,.35)}
-.btn-primary:hover{background:var(--indigo-d);transform:translateY(-1px);box-shadow:0 6px 22px rgba(99,102,241,.45)}
-.btn-secondary{background:var(--bg-s1);color:var(--t1);border:1px solid var(--b2)}
-.btn-secondary:hover{border-color:var(--b3);background:var(--bg-s2)}
-.btn-lg{padding:1rem 2rem;font-size:.95rem;border-radius:var(--r-lg)}
-
-/* ── Stats ─────────────────────────────────────────────── */
-.stats-row{
-  display:flex;align-items:center;justify-content:center;gap:3rem;
-  padding:1.5rem 2rem;margin:3rem auto 0;max-width:700px;
-  background:var(--bg-s1);border:1px solid var(--b1);border-radius:var(--r-xl);flex-wrap:wrap;
-}
-.stat-item{display:flex;flex-direction:column;align-items:center;gap:2px}
-.stat-value{font-size:2rem;font-weight:900;color:var(--t1);line-height:1;letter-spacing:-.04em}
-.stat-value span{color:var(--indigo)}
-.stat-label{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--t3)}
-.stat-sep{width:1px;height:36px;background:var(--b1)}
-@media(max-width:640px){.stat-sep{display:none}.stats-row{gap:1.5rem}}
-
-/* ── Section ───────────────────────────────────────────── */
-.section{padding:6rem 0}
-.section-sm{padding:3rem 0}
-.section-label{display:inline-flex;align-items:center;gap:.5rem;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--indigo);margin-bottom:.75rem}
-.section-title{font-size:clamp(2rem,4vw,3rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;color:var(--t1);margin-bottom:1rem}
-.section-desc{font-size:1.05rem;color:var(--t2);max-width:560px;line-height:1.7}
-
-/* ── Subject Cards ─────────────────────────────────────── */
-.subjects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
-@media(max-width:1024px){.subjects-grid{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:600px){.subjects-grid{grid-template-columns:1fr}}
-
-.subject-card{
-  position:relative;
-  background:var(--bg-s1);border:1px solid var(--b1);border-radius:var(--r-xl);
-  padding:2rem;display:flex;flex-direction:column;gap:1rem;
-  text-decoration:none;color:inherit;
-  transition:border-color var(--t-base),box-shadow var(--t-base),transform var(--t-slow);
-  transform-style:preserve-3d;cursor:pointer;
-  overflow:hidden;
-}
-.subject-card::before{
-  content:'';position:absolute;inset:0;border-radius:inherit;
-  background:linear-gradient(135deg,rgba(var(--sc-rgb),.06) 0%,transparent 60%);
-  opacity:0;transition:opacity var(--t-base);pointer-events:none;
-}
-.subject-card:hover::before{opacity:1}
-.subject-card:hover{border-color:rgba(var(--sc-rgb),.35);box-shadow:0 0 0 1px rgba(var(--sc-rgb),.35),0 20px 40px rgba(0,0,0,.3)}
-
-.subject-card.pro{--sc-rgb:99,102,241;--sc:var(--indigo)}
-.subject-card.sxg{--sc-rgb:6,182,212;--sc:var(--cyan)}
-.subject-card.oop{--sc-rgb:139,92,246;--sc:var(--violet)}
-
-.card-icon-wrap{
-  width:56px;height:56px;border-radius:var(--r-lg);
-  background:rgba(var(--sc-rgb),.10);border:1px solid rgba(var(--sc-rgb),.18);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--sc);transition:background var(--t-base),border-color var(--t-base);
-}
-.subject-card:hover .card-icon-wrap{background:rgba(var(--sc-rgb),.16);border-color:rgba(var(--sc-rgb),.30)}
-.card-badge{display:inline-flex;align-items:center;padding:2px .75rem;border-radius:9999px;font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:rgba(var(--sc-rgb),.10);color:var(--sc);border:1px solid rgba(var(--sc-rgb),.20)}
-.card-title{font-size:1.35rem;font-weight:800;letter-spacing:-.02em;color:var(--t1)}
-.card-desc{font-size:.88rem;color:var(--t2);line-height:1.65;flex:1}
-.card-topics{display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.25rem}
-.card-topic{padding:3px .6rem;border-radius:var(--r-sm);font-size:.68rem;font-weight:600;background:var(--bg-s2);color:var(--t3);border:1px solid var(--b1);font-family:var(--font-mono)}
-.card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:.5rem}
-.card-open{display:inline-flex;align-items:center;gap:.4rem;font-size:.82rem;font-weight:600;color:var(--sc);transition:gap var(--t-fast)}
-.subject-card:hover .card-open{gap:.65rem}
-.card-corner-dot{position:absolute;top:1.5rem;right:1.5rem;width:8px;height:8px;border-radius:50%;background:var(--sc);opacity:.4;box-shadow:0 0 12px rgba(var(--sc-rgb),.5)}
-
-/* ── YouTube ───────────────────────────────────────────── */
-.yt-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2rem}
-@media(max-width:768px){.yt-grid{grid-template-columns:1fr}}
-.yt-card{background:var(--bg-s1);border:1px solid var(--b1);border-radius:var(--r-xl);overflow:hidden;transition:border-color var(--t-base),box-shadow var(--t-base)}
-.yt-card:hover{border-color:var(--b2);box-shadow:0 0 30px rgba(239,68,68,.08)}
-.yt-embed-wrap{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;background:var(--bg-s2)}
-.yt-embed-wrap iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-.yt-info{padding:1.25rem 1.5rem}
-.yt-info-title{font-size:1rem;font-weight:700;color:var(--t1);margin-bottom:.25rem}
-.yt-info-desc{font-size:.82rem;color:var(--t2)}
-
-/* ── Terminal ──────────────────────────────────────────── */
-.terminal-section{padding:4rem 0}
-.terminal-wrap{max-width:740px;margin:0 auto}
-.terminal{background:#0b1220;border:1px solid rgba(255,255,255,.06);border-radius:var(--r-xl);overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.5)}
-.terminal-header{
-  display:flex;align-items:center;gap:.75rem;
-  padding:.85rem 1.25rem;background:#0d1626;border-bottom:1px solid rgba(255,255,255,.05);
-}
-.t-dots{display:flex;gap:.45rem}
-.t-dot{width:12px;height:12px;border-radius:50%}
-.t-dot.r{background:#ef4444}.t-dot.y{background:#f59e0b}.t-dot.g{background:#10b981}
-.t-title{font-family:var(--font-mono);font-size:.75rem;color:rgba(255,255,255,.3);margin:0 auto}
-.terminal-body{padding:1.5rem;font-family:var(--font-mono);font-size:.82rem;line-height:1.8;min-height:220px;color:rgba(255,255,255,.85)}
-.t-line{display:flex;gap:.75rem;margin-bottom:.25rem;opacity:0;transition:opacity .3s}
-.t-line.visible{opacity:1}
-.t-prompt{color:#10b981;flex-shrink:0}
-.t-cmd{color:#e8f0fe}
-.t-out{color:rgba(255,255,255,.45);padding-left:1.5rem}
-.t-out.ok{color:#10b981}
-.t-out.info{color:#06b6d4}
-.t-cursor-line{display:flex;gap:.75rem;align-items:center}
-.t-cursor{display:inline-block;width:8px;height:1.1em;background:#10b981;border-radius:1px;animation:blink .8s infinite}
-
-/* ── Contact ───────────────────────────────────────────── */
-.contact-chips{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin-top:2rem}
-.contact-chip{
-  display:inline-flex;align-items:center;gap:.6rem;
-  padding:.6rem 1.25rem;border-radius:9999px;
-  background:var(--bg-s1);border:1px solid var(--b2);
-  color:var(--t2);font-size:.82rem;font-weight:500;
-  transition:all var(--t-fast);text-decoration:none;
-}
-.contact-chip:hover{color:var(--t1);border-color:var(--b3);background:var(--bg-s2)}
-
-/* ── Teacher Badge ─────────────────────────────────────── */
-.teacher-badge{
-  display:inline-flex;align-items:center;gap:1rem;
-  padding:.75rem 1.5rem;border-radius:var(--r-full);
-  background:var(--bg-s1);border:1px solid var(--b1);
-  margin-bottom:3rem;
-}
-.teacher-avatar{
-  width:38px;height:38px;border-radius:50%;
-  background:linear-gradient(135deg,var(--indigo),var(--cyan));
-  display:flex;align-items:center;justify-content:center;
-  font-weight:700;font-size:.82rem;color:#fff;flex-shrink:0;
-}
-.teacher-name{font-weight:600;font-size:.82rem;color:var(--t1)}
-.teacher-role{font-size:.72rem;color:var(--t3)}
-
-/* ── Reveal ────────────────────────────────────────────── */
-.reveal{opacity:0;transform:translateY(20px);transition:opacity var(--t-slow),transform var(--t-slow)}
-.reveal.visible{opacity:1;transform:none}
-.reveal-delay-1{transition-delay:80ms}
-.reveal-delay-2{transition-delay:160ms}
-.reveal-delay-3{transition-delay:240ms}
-
-/* ── Footer ────────────────────────────────────────────── */
-.footer{padding:3rem 0;border-top:1px solid var(--b1)}
-.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;flex-wrap:wrap}
-.footer-brand{font-weight:800;font-size:.95rem;color:var(--t1)}
-.footer-brand span{color:var(--indigo)}
-.footer-meta{font-size:.78rem;color:var(--t3)}
-.footer-links{display:flex;gap:.5rem}
-.footer-icon-link{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:var(--r-md);background:var(--bg-s1);border:1px solid var(--b1);color:var(--t2);transition:all var(--t-fast)}
-.footer-icon-link:hover{color:var(--t1);border-color:var(--b2)}
-
-.back-top{position:fixed;bottom:1.5rem;right:1.5rem;width:42px;height:42px;border-radius:var(--r-md);background:var(--indigo);color:#fff;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transform:translateY(8px);transition:opacity var(--t-base),transform var(--t-base);box-shadow:0 4px 12px rgba(99,102,241,.4);z-index:50}
-.back-top.visible{opacity:1;pointer-events:all;transform:none}
-.back-top:hover{transform:translateY(-2px)}
-
-/* ── Reduced motion ────────────────────────────────────── */
-@media(prefers-reduced-motion:reduce){
-  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
-}
-</style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SPSITKNM · Terénna príručka štvrtého ročníka</title>
+<meta name="description" content="Výučbový hub SPŠ IT Kysucké Nové Mesto — programovanie, SMART technológie a opakovanie OOP. Skriptá, zadania a projekty čitateľné priamo tu.">
+<script>try{var t=localStorage.getItem('teren-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta property="og:title" content="SPSITKNM · Terénna príručka štvrtého ročníka">
+<meta property="og:description" content="Programovanie, SMART technológie a opakovanie OOP — na jednom mieste, čitateľné priamo tu.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://spsitknm.github.io/">
+<meta property="og:image" content="https://spsitknm.github.io/assets/og-hub.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/ds.css">
+<script src="/app.js"></script>
 </head>
 <body>
+<a href="#main" class="skip">Preskočiť na obsah</a>
 
-<!-- ── Navigation ─────────────────────────────────────── -->
-<nav class="nav" role="navigation" aria-label="Hlavná navigácia">
-  <div class="container nav-inner">
-    <a href="https://spsitknm.github.io" class="nav-logo" aria-label="SPSITKNM Hub">
-      <i data-lucide="graduation-cap" width="20" height="20" aria-hidden="true"></i>
-      SPSIT<span class="logo-dot">KNM</span>
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="/" aria-label="SPSITKNM — domov">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect x=".5" y=".5" width="31" height="31" rx="3" fill="none" stroke="var(--line2)"/>
+        <path d="M3 24C8 21 11 25 16 22 21 19 24 23 29 20" fill="none" stroke="var(--pro)" stroke-width="1.4"/>
+        <path d="M3 19C8 16 11 20 16 17 21 14 24 18 29 15" fill="none" stroke="var(--sxg)" stroke-width="1.4"/>
+        <path d="M3 14C8 11 11 15 16 12 21 9 24 13 29 10" fill="none" stroke="var(--oop)" stroke-width="1.4"/></svg>
+      <b>SPSITKNM</b>
     </a>
-
-    <nav class="nav-links" aria-label="Predmety">
-      <a href="https://spsitknm.github.io/SPSITKNM" class="nav-link">
-        <i data-lucide="keyboard" width="14" height="14" aria-hidden="true"></i>
-        PRO
-      </a>
-      <a href="https://spsitknm.github.io/SXG" class="nav-link">
-        <i data-lucide="monitor" width="14" height="14" aria-hidden="true"></i>
-        SXG
-      </a>
-      <a href="https://spsitknm.github.io/oop_opakovanie" class="nav-link">
-        <i data-lucide="rotate-ccw" width="14" height="14" aria-hidden="true"></i>
-        OOP
-      </a>
-      <a href="https://discord.gg/eSQDsna4d7" class="nav-link" target="_blank" rel="noopener">
-        <i data-lucide="message-square" width="14" height="14" aria-hidden="true"></i>
-        Discord
-      </a>
+    <span class="top__year">4. ROČNÍK · IST</span>
+    <nav class="top__nav" aria-label="Predmety">
+      <a class="n-pro" href="/predmet.html?s=pro">PRO</a>
+      <a class="n-sxg" href="/predmet.html?s=sxg">SXG</a>
+      <a class="n-oop" href="/predmet.html?s=oop">OOP</a>
+      <a href="/showcase.html">Projekty</a>
     </nav>
-
-    <div class="nav-actions">
-      <button class="icon-btn" id="theme-toggle" aria-label="Prepnúť tému">
-        <i data-lucide="sun" width="16" height="16" class="sun-icon" aria-hidden="true"></i>
-        <i data-lucide="moon" width="16" height="16" class="moon-icon" aria-hidden="true"></i>
+    <div class="top__actions">
+      <button type="button" class="searchbtn" data-open-palette aria-label="Hľadať v obsahu">
+        <svg class="ic" width="14" height="14"><use href="/assets/icons.svg#search"/></svg>
+        Hľadať <span class="kbd">⌘K</span>
       </button>
-      <button class="hamburger" id="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav-drawer">
-        <span></span><span></span><span></span>
-      </button>
+      <button type="button" class="btn btn--sm" data-theme-toggle>Téma</button>
     </div>
   </div>
-</nav>
+</header>
 
-<!-- ── Mobile Drawer ───────────────────────────────────── -->
-<div class="nav-drawer" id="nav-drawer" aria-label="Mobilná navigácia">
-  <a href="https://spsitknm.github.io/SPSITKNM" class="nav-link">
-    <i data-lucide="keyboard" width="18" height="18" aria-hidden="true"></i>
-    PRO — Programovanie
-  </a>
-  <a href="https://spsitknm.github.io/SXG" class="nav-link">
-    <i data-lucide="monitor" width="18" height="18" aria-hidden="true"></i>
-    SXG — SMART Technológie
-  </a>
-  <a href="https://spsitknm.github.io/oop_opakovanie" class="nav-link">
-    <i data-lucide="rotate-ccw" width="18" height="18" aria-hidden="true"></i>
-    OOP Opakovanie
-  </a>
-  <a href="https://discord.gg/eSQDsna4d7" class="nav-link" target="_blank" rel="noopener">
-    <i data-lucide="message-square" width="18" height="18" aria-hidden="true"></i>
-    Discord server
-  </a>
-  <a href="https://github.com/SPSITKNM" class="nav-link" target="_blank" rel="noopener">
-    <i data-lucide="github" width="18" height="18" aria-hidden="true"></i>
-    GitHub organizácia
-  </a>
-</div>
+<main id="main">
 
-<!-- ── BG Mesh ─────────────────────────────────────────── -->
-<div class="bg-mesh" aria-hidden="true"></div>
-
-<main>
-
-<!-- ── Hero ───────────────────────────────────────────── -->
-<section class="hero" aria-labelledby="hero-heading">
-  <div class="container">
-    <div class="teacher-badge reveal">
-      <div class="teacher-avatar" aria-hidden="true">TM</div>
-      <div>
-        <div class="teacher-name">Tomaš Mucha</div>
-        <div class="teacher-role">Vyučujúci PRO &amp; SXG · SPSITKNM</div>
-      </div>
-    </div>
-
-    <div class="hero-eyebrow reveal">
-      <i data-lucide="sparkles" width="14" height="14" aria-hidden="true"></i>
-      Výučbový Hub · 4. ročník · 2024–2025
-    </div>
-
-    <h1 class="hero-title" id="hero-heading">
-      <span class="grad-text glitch" data-text="SPSITKNM">SPSITKNM</span>
-    </h1>
-
-    <p class="hero-sub reveal">
-      Stredná priemyselná škola informačných a sieťových technológií
-    </p>
-
-    <div class="typewriter-wrap reveal">
-      <span class="tw-label">// kurz →</span>
-      <span id="typewriter" aria-live="polite" aria-label="Prebiehajúce témy"></span>
-      <span class="tw-cursor" aria-hidden="true"></span>
-    </div>
-
-    <div class="hero-actions reveal">
-      <a href="https://spsitknm.github.io/SPSITKNM" class="btn btn-primary btn-lg">
-        <i data-lucide="keyboard" width="18" height="18" aria-hidden="true"></i>
-        PRO — Programovanie
-      </a>
-      <a href="https://spsitknm.github.io/SXG" class="btn btn-secondary btn-lg">
-        <i data-lucide="monitor" width="18" height="18" aria-hidden="true"></i>
-        SXG — SMART Tech
-      </a>
-    </div>
-
-    <div class="stats-row reveal">
-      <div class="stat-item">
-        <span class="stat-value">3<span></span></span>
-        <span class="stat-label">Repozitáre</span>
-      </div>
-      <div class="stat-sep" aria-hidden="true"></div>
-      <div class="stat-item">
-        <span class="stat-value">20<span>+</span></span>
-        <span class="stat-label">Materiálov</span>
-      </div>
-      <div class="stat-sep" aria-hidden="true"></div>
-      <div class="stat-item">
-        <span class="stat-value">4.</span>
-        <span class="stat-label">Ročník</span>
-      </div>
-      <div class="stat-sep" aria-hidden="true"></div>
-      <div class="stat-item">
-        <span class="stat-value">C<span>#</span></span>
-        <span class="stat-label">a C++</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Subjects ────────────────────────────────────────── -->
-<section class="section" aria-labelledby="subjects-heading">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-label">
-        <i data-lucide="book-open" width="12" height="12" aria-hidden="true"></i>
-        Predmety
-      </div>
-      <h2 class="section-title" id="subjects-heading">Čo sa naučíš</h2>
-      <p class="section-desc">Dva hlavné predmety pokrývajúce programovanie, infraštruktúru a moderné IT technológie.</p>
-    </div>
-
-    <div class="subjects-grid">
-      <!-- PRO -->
-      <a href="https://spsitknm.github.io/SPSITKNM" class="subject-card pro reveal reveal-delay-1" aria-label="Otvoriť PRO — Programovanie">
-        <div class="card-corner-dot" aria-hidden="true"></div>
-        <div class="card-icon-wrap" aria-hidden="true">
-          <i data-lucide="keyboard" width="28" height="28"></i>
-        </div>
-        <span class="card-badge">PRO</span>
-        <h3 class="card-title">Programovanie</h3>
-        <p class="card-desc">Objektovo orientované programovanie, algoritmy a návrh programov v C# a C++. Od tried a dedičnosti až po Big O notáciu.</p>
-        <div class="card-topics" aria-label="Témy">
-          <span class="card-topic">OOP</span>
-          <span class="card-topic">C#</span>
-          <span class="card-topic">C++</span>
-          <span class="card-topic">Big O</span>
-          <span class="card-topic">Algoritmy</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-open">
-            Otvoriť predmet
-            <i data-lucide="arrow-right" width="16" height="16" aria-hidden="true"></i>
-          </span>
-        </div>
-      </a>
-
-      <!-- SXG -->
-      <a href="https://spsitknm.github.io/SXG" class="subject-card sxg reveal reveal-delay-2" aria-label="Otvoriť SXG — SMART Technológie">
-        <div class="card-corner-dot" aria-hidden="true"></div>
-        <div class="card-icon-wrap" aria-hidden="true">
-          <i data-lucide="monitor" width="28" height="28"></i>
-        </div>
-        <span class="card-badge">SXG</span>
-        <h3 class="card-title">SMART Technológie</h3>
-        <p class="card-desc">Linux, virtualizácia, kontajnerizácia a moderná IT infraštruktúra pre DevOps a systémových inžinierov.</p>
-        <div class="card-topics" aria-label="Témy">
-          <span class="card-topic">Linux</span>
-          <span class="card-topic">Docker</span>
-          <span class="card-topic">Git</span>
-          <span class="card-topic">KVM</span>
-          <span class="card-topic">OpenTelemetry</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-open">
-            Otvoriť predmet
-            <i data-lucide="arrow-right" width="16" height="16" aria-hidden="true"></i>
-          </span>
-        </div>
-      </a>
-
-      <!-- OOP -->
-      <a href="https://spsitknm.github.io/oop_opakovanie" class="subject-card oop reveal reveal-delay-3" aria-label="Otvoriť OOP Opakovanie">
-        <div class="card-corner-dot" aria-hidden="true"></div>
-        <div class="card-icon-wrap" aria-hidden="true">
-          <i data-lucide="rotate-ccw" width="28" height="28"></i>
-        </div>
-        <span class="card-badge">OOP</span>
-        <h3 class="card-title">OOP Opakovanie</h3>
-        <p class="card-desc">Interaktívne opakovanie OOP konceptov s checklistom a sledovaním pokroku. Príprava na skúšku z PRO predmetu.</p>
-        <div class="card-topics" aria-label="Témy">
-          <span class="card-topic">Triedy</span>
-          <span class="card-topic">Dedičnosť</span>
-          <span class="card-topic">Polymorfizmus</span>
-          <span class="card-topic">Interfejsy</span>
-        </div>
-        <div class="card-footer">
-          <span class="card-open">
-            Otvoriť opakovanie
-            <i data-lucide="arrow-right" width="16" height="16" aria-hidden="true"></i>
-          </span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- ── YouTube ─────────────────────────────────────────── -->
-<section class="section" style="padding-top:0" aria-labelledby="yt-heading">
-  <div class="container">
-    <div class="section-header reveal">
-      <div class="section-label">
-        <i data-lucide="play-circle" width="12" height="12" aria-hidden="true"></i>
-        Video kurzy
-      </div>
-      <h2 class="section-title" id="yt-heading">YouTube playlist</h2>
-      <p class="section-desc">Videá k hodine — všetky záznamy a tutoriály na jednom mieste.</p>
-    </div>
-
-    <div class="yt-grid reveal">
-      <div class="yt-card">
-        <div class="yt-embed-wrap">
-          <iframe
-            loading="lazy"
-            src="https://www.youtube-nocookie.com/embed/videoseries?list=PLJW-oHbyRDeJt24tw-RaHJwxbXUCh3GrQ&rel=0&modestbranding=1&color=white"
-            title="PRO Programovací kurz — SPSITKNM"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            referrerpolicy="strict-origin-when-cross-origin">
-          </iframe>
-        </div>
-        <div class="yt-info">
-          <div class="yt-info-title">Programovací kurz PRO</div>
-          <div class="yt-info-desc">OOP, C#, C++, algoritmizácia, Big O notácia · záznamy z hodín</div>
-        </div>
-      </div>
-
-      <div class="yt-card">
-        <div class="yt-embed-wrap">
-          <iframe
-            loading="lazy"
-            src="https://www.youtube-nocookie.com/embed/videoseries?list=PLJW-oHbyRDeL62yOcaqjex7cKnzcEYQXi&rel=0&modestbranding=1&color=white"
-            title="AI Workshop séria — SPSITKNM"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-            referrerpolicy="strict-origin-when-cross-origin">
-          </iframe>
-        </div>
-        <div class="yt-info">
-          <div class="yt-info-title">AI Workshop séria</div>
-          <div class="yt-info-desc">Praktické ukážky AI nástrojov a ich využitie v programovaní</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── Terminal ────────────────────────────────────────── -->
-<section class="terminal-section" aria-labelledby="terminal-heading">
-  <div class="container">
-    <div class="section-header reveal" style="text-align:center;max-width:600px;margin:0 auto 2.5rem">
-      <div class="section-label" style="justify-content:center">
-        <i data-lucide="terminal" width="12" height="12" aria-hidden="true"></i>
-        Live demo
-      </div>
-      <h2 class="section-title" id="terminal-heading">Čo sa naučíš pracovať</h2>
-    </div>
-    <div class="terminal-wrap reveal">
-      <div class="terminal" role="region" aria-label="Ukážka terminálových príkazov">
-        <div class="terminal-header" aria-hidden="true">
-          <div class="t-dots">
-            <span class="t-dot r"></span>
-            <span class="t-dot y"></span>
-            <span class="t-dot g"></span>
-          </div>
-          <span class="t-title">bash — spsitknm@fedora</span>
-        </div>
-        <div class="terminal-body" id="terminal-body" aria-label="Terminálový výstup">
-          <div class="t-cursor-line" aria-hidden="true">
-            <span class="t-prompt">$</span>
-            <span class="t-cursor"></span>
+  <section class="hero" aria-labelledby="h1">
+    <div class="hero__in">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:32px;align-items:end">
+        <div>
+          <p class="eyebrow" style="margin-bottom:14px">SPŠ IT Kysucké Nové Mesto · Tomáš Mucha</p>
+          <h1 class="display" id="h1" style="margin-bottom:14px">Terénna príručka<br>štvrtého ročníka</h1>
+          <p class="lede" style="max-width:46ch;margin-bottom:20px">Programovanie, SMART technológie a opakovanie OOP. Všetky skriptá, zadania a projekty na jednom mieste — čitateľné priamo tu.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <a class="btn btn--solid" href="#zacni">Začni tu <svg class="ic" width="14" height="14"><use href="/assets/icons.svg#arrow-right"/></svg></a>
+            <a class="btn" href="#predmety" id="continue-btn">Prejsť na predmety</a>
           </div>
         </div>
+        <div class="card" style="align-self:end">
+          <p class="eyebrow" style="margin-bottom:12px">Čo tu je</p>
+          <div style="display:grid;gap:9px;font-size:13.5px;line-height:1.45" id="stats">
+            <div style="display:flex;gap:10px;align-items:baseline"><b class="mono" style="font-size:15px;width:44px;flex:none;color:var(--pro)" data-stat="docs">—</b><span class="i2">dokumentov v troch predmetoch</span></div>
+            <div style="display:flex;gap:10px;align-items:baseline"><b class="mono" style="font-size:15px;width:44px;flex:none;color:var(--sxg)" data-stat="words">—</b><span class="i2">slov skrípt, teórie a zadaní</span></div>
+            <div style="display:flex;gap:10px;align-items:baseline"><b class="mono" style="font-size:15px;width:44px;flex:none;color:var(--oop)">3</b><span class="i2">predmety, jeden vstupný bod</span></div>
+          </div>
+          <p class="mono" style="font-size:10.5px;line-height:1.5;color:var(--ink3);margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">Čísla počíta skript z <code>content/*.json</code> pri načítaní — nie sú napevno.</p>
+        </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ── Contact ─────────────────────────────────────────── -->
-<section class="section-sm" aria-labelledby="contact-heading">
-  <div class="container" style="text-align:center">
-    <div class="section-label reveal" style="justify-content:center">
-      <i data-lucide="link" width="12" height="12" aria-hidden="true"></i>
-      Kontakt
+  <section class="sec" id="zacni" aria-labelledby="zh">
+    <div class="rule"><span class="n">01</span><h2 id="zh">Začni tu — prvých 20 minút</h2><span class="bar"></span></div>
+    <div class="steps">
+      <div class="step"><div class="step__k" style="color:var(--pro)">KROK 01</div><b>Nastav si stroj</b><p>.NET SDK, VS Code, Git. <a class="lnk" href="/citacka.html?s=pro&amp;doc=nalezitosti">nalezitosti.md</a></p></div>
+      <div class="step"><div class="step__k" style="color:var(--pro)">KROK 02</div><b>Ako to tu funguje</b><p>Hodiny, Discord, Issue na zadania, hodnotenie. Prehľad v predmete PRO.</p></div>
+      <div class="step"><div class="step__k" style="color:var(--sxg)">KROK 03</div><b>Prečítaj prvé dve kapitoly</b><p><a class="lnk" href="/citacka.html?s=pro&amp;doc=poznamky">C# základy</a> · <a class="lnk" href="/citacka.html?s=sxg&amp;doc=uvod-do-operacnych-systemov">Úvod do OS</a></p></div>
+      <div class="step"><div class="step__k" style="color:var(--oop)">KROK 04</div><b>Vyber si projekt</b><p>Šesť tém, šablóna systémovej analýzy. <a class="lnk" href="/citacka.html?s=pro&amp;doc=projekty">projekty.md</a></p></div>
     </div>
-    <h2 class="section-title reveal" id="contact-heading" style="margin-bottom:.5rem">Potrebuješ pomoc?</h2>
-    <p class="section-desc reveal" style="margin:0 auto 0">Pripoj sa na Discord alebo sleduj YouTube kanál.</p>
-    <div class="contact-chips reveal">
-      <a href="https://discord.gg/eSQDsna4d7" class="contact-chip" target="_blank" rel="noopener" aria-label="Discord server">
-        <i data-lucide="message-square" width="16" height="16" aria-hidden="true"></i>
-        Discord server
+  </section>
+
+  <section class="sec" id="predmety" aria-labelledby="ph">
+    <div class="rule"><span class="n">02</span><h2 id="ph">Predmety</h2><span class="bar"></span></div>
+    <div class="grid" id="subject-cards" style="--wrap:1180px">
+      <a class="subj" data-s="pro" href="/predmet.html?s=pro">
+        <div class="subj__hd"><span class="subj__code">PRO</span><span class="mono" style="font-size:11px;color:var(--ink3)" data-count="pro">— dokumentov</span></div>
+        <div class="subj__n">Programovanie</div>
+        <p class="subj__d">C# od základov, algoritmizácia v C++, komisionálna skúška, šesť projektových zadaní, súťaž.</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag">C#</span><span class="tag">C++</span><span class="tag">grafy</span><span class="tag">OOP</span></div>
+        <div class="subj__ft"><span data-progress="pro">prečítané — / —</span><b>Vstúpiť →</b></div>
       </a>
-      <a href="https://www.youtube.com/channel/UC0TOfJp6MtFlLSgfdhnlS9g" class="contact-chip" target="_blank" rel="noopener" aria-label="YouTube kanál">
-        <i data-lucide="youtube" width="16" height="16" aria-hidden="true"></i>
-        YouTube kanál
+      <a class="subj" data-s="sxg" href="/predmet.html?s=sxg">
+        <div class="subj__hd"><span class="subj__code">SXG</span><span class="mono" style="font-size:11px;color:var(--ink3)" data-count="sxg">— dokumentov</span></div>
+        <div class="subj__n">SMART technológie</div>
+        <p class="subj__d">Linux a procesy, Docker, Git, virtualizácia (KVM, VirtualBox), OpenTelemetry.</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag">bash</span><span class="tag">docker</span><span class="tag">fork/pipe</span></div>
+        <div class="subj__ft"><span data-progress="sxg">prečítané — / —</span><b>Vstúpiť →</b></div>
       </a>
-      <a href="https://github.com/SPSITKNM" class="contact-chip" target="_blank" rel="noopener" aria-label="GitHub organizácia">
-        <i data-lucide="github" width="16" height="16" aria-hidden="true"></i>
-        GitHub org
-      </a>
-      <a href="http://www.spsknm.sk/ssknm/" class="contact-chip" target="_blank" rel="noopener" aria-label="Webstránka školy">
-        <i data-lucide="school" width="16" height="16" aria-hidden="true"></i>
-        SPSITKNM
+      <a class="subj" data-s="oop" href="/predmet.html?s=oop">
+        <div class="subj__hd"><span class="subj__code">OOP</span><span class="mono" style="font-size:11px;color:var(--ink3)">12 tém</span></div>
+        <div class="subj__n">Opakovanie na skúšku</div>
+        <p class="subj__d">Teória OOP s C++ príkladmi a checklist dvanástich tém — s vlastným progresom.</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag">dedičnosť</span><span class="tag">Big O</span><span class="tag">pamäť</span></div>
+        <div class="subj__ft"><span data-oop-progress>zvládnuté — / 12 tém</span><b>Vstúpiť →</b></div>
       </a>
     </div>
-  </div>
-</section>
+  </section>
+
+  <section class="sec" aria-labelledby="ah">
+    <div class="rule"><span class="n">03</span><h2 id="ah">Aktuality a odkazy</h2><span class="bar"></span></div>
+    <div class="grid">
+      <div class="news" id="news" hidden>
+        <div class="news__hd"><span class="eyebrow">Aktuality</span><span class="mono" style="font-size:10.5px;color:var(--ink3);margin-left:auto" data-news-stamp></span></div>
+        <div class="prose" data-news-body></div>
+        <p class="mono" style="font-size:10.5px;color:var(--ink3);margin-top:12px">Zdroj: <a class="lnk" href="https://github.com/SPSITKNM/SPSITKNM/blob/main/aktuality.md">aktuality.md</a> · pri výpadku sa blok nezobrazí.</p>
+      </div>
+      <div class="card">
+        <p class="eyebrow" style="margin-bottom:12px">Kanály</p>
+        <div style="display:grid;gap:10px;font-size:13.5px">
+          <a class="lnk" href="https://discord.gg/eSQDsna4d7"><svg class="ic" width="14" height="14"><use href="/assets/icons.svg#chat"/></svg> Discord server</a>
+          <a class="lnk" href="https://www.youtube.com/channel/UC0TOfJp6MtFlLSgfdhnlS9g"><svg class="ic" width="14" height="14"><use href="/assets/icons.svg#youtube"/></svg> YouTube — záznamy z hodín</a>
+          <a class="lnk" href="https://github.com/SPSITKNM"><svg class="ic" width="14" height="14"><use href="/assets/icons.svg#github"/></svg> GitHub organizácia</a>
+          <a class="lnk" href="http://www.spsknm.sk/ssknm/"><svg class="ic" width="14" height="14"><use href="/assets/icons.svg#external"/></svg> Web školy spsknm.sk</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
 </main>
 
-<!-- ── Footer ──────────────────────────────────────────── -->
-<footer class="footer">
-  <div class="container footer-inner">
+<footer class="foot">
+  <div class="foot__in">
     <div>
-      <div class="footer-brand">SPSIT<span>KNM</span></div>
-      <div class="footer-meta">Tomaš Mucha · Vyučujúci PRO &amp; SXG · 2024–2025</div>
+      <p class="mono">Non scholae, sed vitae discimus</p>
+      <p style="font-size:13px;color:var(--ink2);margin-top:4px">Tomáš Mucha · vyučujúci PRO &amp; SXG · SPSITKNM · 2025/2026</p>
     </div>
-    <div class="footer-links">
-      <a href="https://github.com/SPSITKNM" class="footer-icon-link" target="_blank" rel="noopener" aria-label="GitHub">
-        <i data-lucide="github" width="16" height="16" aria-hidden="true"></i>
-      </a>
-      <a href="https://discord.gg/eSQDsna4d7" class="footer-icon-link" target="_blank" rel="noopener" aria-label="Discord">
-        <i data-lucide="message-square" width="16" height="16" aria-hidden="true"></i>
-      </a>
-      <a href="https://www.youtube.com/channel/UC0TOfJp6MtFlLSgfdhnlS9g" class="footer-icon-link" target="_blank" rel="noopener" aria-label="YouTube">
-        <i data-lucide="youtube" width="16" height="16" aria-hidden="true"></i>
-      </a>
+    <div style="display:flex;gap:14px;font-size:13px">
+      <a class="lnk" href="https://github.com/SPSITKNM">GitHub</a>
+      <a class="lnk" href="https://discord.gg/eSQDsna4d7">Discord</a>
+      <a class="lnk" href="https://www.youtube.com/channel/UC0TOfJp6MtFlLSgfdhnlS9g">YouTube</a>
     </div>
   </div>
 </footer>
 
-<!-- ── Back to Top ─────────────────────────────────────── -->
-<button class="back-top" id="back-top" aria-label="Späť nahor">
-  <i data-lucide="chevron-up" width="20" height="20" aria-hidden="true"></i>
-</button>
+<nav class="tabbar" aria-label="Rýchla navigácia">
+  <a href="/" aria-current="page">Hub</a>
+  <a href="/predmet.html?s=pro">PRO</a>
+  <a href="/predmet.html?s=sxg">SXG</a>
+  <a href="/oop.html">OOP</a>
+</nav>
 
 <script>
-// ── Init Lucide icons
-lucide.createIcons({ attrs: { 'stroke-width': '1.75' } });
+(function boot() {
+  if (!window.TEREN) { return setTimeout(boot, 20); }
+  var T = window.TEREN;
+  // vrstevnicový podklad hero
+  var hero = document.querySelector('.hero');
+  if (hero) hero.insertAdjacentHTML('afterbegin', T.contourSVG(7, -1, 1200, 260));
 
-// ── Theme toggle
-const html = document.documentElement;
-const themeBtn = document.getElementById('theme-toggle');
-const savedTheme = localStorage.getItem('spsitknm-theme') || 'dark';
-html.dataset.theme = savedTheme;
-themeBtn.addEventListener('click', () => {
-  const next = html.dataset.theme === 'dark' ? 'light' : 'dark';
-  html.dataset.theme = next;
-  localStorage.setItem('spsitknm-theme', next);
-});
-
-// ── Hamburger
-const ham = document.getElementById('hamburger');
-const drawer = document.getElementById('nav-drawer');
-ham.addEventListener('click', () => {
-  const open = ham.classList.toggle('open');
-  drawer.classList.toggle('open', open);
-  ham.setAttribute('aria-expanded', String(open));
-  document.body.style.overflow = open ? 'hidden' : '';
-});
-drawer.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => {
-  ham.classList.remove('open');
-  drawer.classList.remove('open');
-  ham.setAttribute('aria-expanded', 'false');
-  document.body.style.overflow = '';
-}));
-
-// ── Scroll reveal
-const revealEls = document.querySelectorAll('.reveal');
-const io = new IntersectionObserver((entries) => {
-  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); } });
-}, { threshold: 0.08 });
-revealEls.forEach(el => io.observe(el));
-
-// ── Back to top
-const backTop = document.getElementById('back-top');
-window.addEventListener('scroll', () => { backTop.classList.toggle('visible', window.scrollY > 400); });
-backTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-// ── Typewriter
-const TOPICS = [
-  'Objektovo orientované programovanie',
-  'Algoritmizácia & Big O notácia',
-  'Linux & príkazový riadok',
-  'Docker & kontajnerizácia',
-  'Git, GitLab, CI/CD pipeline',
-  'KVM virtualizácia',
-  'C# — syntaxe a LINQ',
-  'C++ — pointery a pamäť',
-  'OpenTelemetry monitoring',
-];
-let tIdx = 0, cIdx = 0, deleting = false;
-const twEl = document.getElementById('typewriter');
-function type() {
-  const cur = TOPICS[tIdx];
-  twEl.textContent = deleting ? cur.slice(0, cIdx - 1) : cur.slice(0, cIdx + 1);
-  if (deleting) cIdx--; else cIdx++;
-  if (!deleting && cIdx === cur.length) { deleting = true; setTimeout(type, 2000); return; }
-  if (deleting && cIdx === 0) { deleting = false; tIdx = (tIdx + 1) % TOPICS.length; }
-  setTimeout(type, deleting ? 38 : 75);
-}
-setTimeout(type, 600);
-
-// ── 3D Tilt
-if (!window.matchMedia('(hover: none)').matches) {
-  document.querySelectorAll('.subject-card').forEach(card => {
-    let tx = 0, ty = 0, cx = 0, cy = 0, raf;
-    card.addEventListener('mouseenter', () => {
-      card.style.transition = 'border-color 250ms,box-shadow 250ms';
-      function anim() {
-        cx += (tx - cx) * 0.12;
-        cy += (ty - cy) * 0.12;
-        card.style.transform = `perspective(900px) rotateX(${cy}deg) rotateY(${cx}deg)`;
-        raf = requestAnimationFrame(anim);
-      }
-      anim();
+  Promise.all(['pro', 'sxg', 'oop'].map(function (s) {
+    return fetch('/content/' + s + '.json').then(function (r) { return r.json(); }).catch(function () { return null; });
+  })).then(function (sets) {
+    var totalDocs = 0, totalWords = 0, bySlug = {};
+    sets.forEach(function (set, i) {
+      if (!set) return;
+      var s = ['pro', 'sxg', 'oop'][i];
+      var slugs = (set.docs || []).map(function (d) { return d.slug; });
+      bySlug[s] = slugs;
+      totalDocs += slugs.length;
+      totalWords += (set.docs || []).reduce(function (n, d) { return n + (d.words || 0); }, 0);
+      var cnt = document.querySelector('[data-count="' + s + '"]');
+      if (cnt) cnt.textContent = slugs.length + ' dokumentov';
+      var pr = document.querySelector('[data-progress="' + s + '"]');
+      if (pr) pr.textContent = 'prečítané ' + T.readCount(s, slugs) + ' / ' + slugs.length;
     });
-    card.addEventListener('mousemove', e => {
-      const r = card.getBoundingClientRect();
-      tx = ((e.clientX - r.left) / r.width - 0.5) * 14;
-      ty = ((e.clientY - r.top) / r.height - 0.5) * -14;
-    });
-    card.addEventListener('mouseleave', () => {
-      cancelAnimationFrame(raf);
-      tx = 0; ty = 0;
-      card.style.transition = 'border-color 250ms,box-shadow 250ms,transform 500ms cubic-bezier(.34,1.56,.64,1)';
-      card.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg)';
-    });
-  });
-}
+    var sd = document.querySelector('[data-stat="docs"]'); if (sd) sd.textContent = totalDocs;
+    var sw = document.querySelector('[data-stat="words"]'); if (sw) sw.textContent = Math.round(totalWords / 1000) + 'k';
 
-// ── Terminal animation
-const TERMINAL_LINES = [
-  { type: 'cmd',  text: 'git clone https://github.com/SPSITKNM/SPSITKNM.git', delay: 400 },
-  { type: 'out',  text: "Cloning into 'SPSITKNM'...", delay: 900 },
-  { type: 'ok',   text: 'done.', delay: 1300 },
-  { type: 'cmd',  text: 'docker pull nginx:alpine', delay: 2000 },
-  { type: 'info', text: 'alpine: Pulling from library/nginx', delay: 2600 },
-  { type: 'ok',   text: 'Status: Downloaded newer image for nginx:alpine', delay: 3200 },
-  { type: 'cmd',  text: 'docker run -d -p 80:80 nginx:alpine', delay: 3900 },
-  { type: 'ok',   text: 'a3f2c8d91b4e', delay: 4400 },
-  { type: 'cmd',  text: 'git status', delay: 5100 },
-  { type: 'ok',   text: 'On branch main — nothing to commit', delay: 5700 },
-];
-const termBody = document.getElementById('terminal-body');
-TERMINAL_LINES.forEach(line => {
-  setTimeout(() => {
-    const el = document.createElement('div');
-    if (line.type === 'cmd') {
-      el.className = 't-line visible';
-      el.innerHTML = `<span class="t-prompt">$</span><span class="t-cmd">${line.text}</span>`;
-    } else {
-      el.className = 't-line visible';
-      el.innerHTML = `<span class="t-out ${line.type === 'ok' ? 'ok' : line.type === 'info' ? 'info' : ''}">${line.text}</span>`;
+    // "Pokračuj v čítaní"
+    var last = T.lastRead();
+    if (last && bySlug[last.split('/')[0]]) {
+      var cb = document.getElementById('continue-btn');
+      var s = last.split('/')[0], sl = last.split('/')[1];
+      var set = sets[['pro', 'sxg', 'oop'].indexOf(s)];
+      var doc = set && (set.docs || []).filter(function (d) { return d.slug === sl; })[0];
+      if (cb && doc) { cb.textContent = 'Pokračuj v čítaní: ' + doc.file; cb.href = '/citacka.html?s=' + s + '&doc=' + sl; }
     }
-    const cursor = termBody.querySelector('.t-cursor-line');
-    termBody.insertBefore(el, cursor);
-  }, line.delay);
-});
+  });
+
+  // OOP progres z localStorage
+  try {
+    var st = JSON.parse(localStorage.getItem('oop-check') || '{}');
+    var done = Object.keys(st).filter(function (k) { return st[k]; }).length;
+    var el = document.querySelector('[data-oop-progress]');
+    if (el) el.textContent = 'zvládnuté ' + done + ' / 12 tém';
+  } catch (e) {}
+
+  T.loadNews(document.getElementById('news'), 'SPSITKNM', 'aktuality.md');
+})();
 </script>
 </body>
 </html>

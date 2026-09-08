@@ -1,0 +1,33 @@
+name: search-index
+
+on:
+  push:
+    branches: [main]
+    paths: ['content/**', '.github/scripts/build-search-index.mjs', '.github/workflows/search-index.yml']
+  schedule:
+    - cron: '17 4 * * 1'   # každý pondelok 04:17 UTC — zachytí zmeny v .md sibling repov
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node .github/scripts/build-search-index.mjs
+      - name: commit
+        run: |
+          if [ -n "$(git status --porcelain search-index.json)" ]; then
+            git config user.name  "spsitknm-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add search-index.json
+            git commit -m "chore: obnova search-index.json"
+            git push
+          else
+            echo "žiadna zmena"
+          fi

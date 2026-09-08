@@ -1,0 +1,97 @@
+{
+  "subject": {
+    "id": "sxg",
+    "name": "SMART technológie",
+    "accent": "sxg",
+    "repo": "SXG",
+    "lede": "Linux a procesy, kontajnerizácia, virtualizácia a verzionovanie. Praktické zručnosti pre systémovú prácu.",
+    "deadline": null
+  },
+  "tracks": [
+    { "id": "linux", "name": "1 · Linux a systém", "note": "Príkazový riadok a to, čo sa deje pod ním.", "docs": ["uvod-do-operacnych-systemov", "linux-commands", "fedora-commands"] },
+    { "id": "kontajnery", "name": "2 · Kontajnery a virtualizácia", "note": "Docker, KVM a VirtualBox.", "docs": ["docker", "kvm", "virtualbox"] },
+    { "id": "devops", "name": "3 · Verzionovanie a nástroje", "note": "Git, automatizácia, observabilita, SSH.", "docs": ["git-github-gitlab", "makefile", "otel", "tips"] }
+  ],
+  "docs": [
+    {
+      "slug": "docker", "file": "docker.md",
+      "title": "Docker — architektúra a prax",
+      "desc": "Images vs kontajnery, build a run, bind mount vs volume, Compose s Flask/PostgreSQL/NGINX, siete, logs, swarm.",
+      "kind": "skripta", "lang": ["bash", "docker"], "words": 3433, "updated": "2026-05-05",
+      "headings": ["Docker základy a architektúra", "run vs images vs start", "Flask + Compose", "Od aplikácie po kontajner", "Bind Mount vs Volume", "Compose: Flask, PostgreSQL, NGINX", "Load balancing", "Docker networking", "Logs a debugging", "docker stats", "Docker swarm"],
+      "related": ["sxg/git-github-gitlab", "pro/komisionalna-skuska"]
+    },
+    {
+      "slug": "uvod-do-operacnych-systemov", "file": "Uvod_do_operacnych_systemov.md",
+      "title": "Úvod do operačných systémov",
+      "desc": "Procesy a ich stavy, PCB, fork, exec, pipe medzi rodičom a dieťaťom, wait a zombie procesy.",
+      "kind": "skripta", "lang": ["bash"], "words": 2849, "updated": "2026-05-05",
+      "headings": ["Procesy", "Stavový diagram procesu", "PCB", "fork", "exec", "pipe", "wait a zombie"],
+      "related": ["sxg/linux-commands", "pro/algoritmizacia"]
+    },
+    {
+      "slug": "git-github-gitlab", "file": "git_github_gitlab.md",
+      "title": "Git, GitHub, GitLab",
+      "desc": "Verzionovanie, merge a konflikty, CI/CD pipeline, Continuous Delivery, rozdiely GitHub a GitLab.",
+      "kind": "skripta", "lang": ["bash"], "words": 1142, "updated": "2026-05-05",
+      "headings": ["Merge a konflikty", "Merge conflicts a pipelines", "CI / CD", "Continuous Delivery Pipeline", "Testovanie aplikácie"],
+      "related": ["pro/github-vs-gitlab", "pro/zadania-na-hodine"]
+    },
+    {
+      "slug": "kvm", "file": "kvm.md",
+      "title": "KVM virtualizácia",
+      "desc": "Overenie podpory virtualizácie, QEMU/KVM príkazy, ladenie výkonu cez Tuned profily.",
+      "kind": "skripta", "lang": ["bash"], "words": 207, "updated": "2026-05-05",
+      "headings": ["Validácia virtualizácie", "virsh", "Tuned profily"],
+      "related": ["sxg/virtualbox"]
+    },
+    {
+      "slug": "otel", "file": "otel.md",
+      "title": "Observabilita a OpenTelemetry",
+      "desc": "Prečo observabilita, signály (traces, metrics, logs), spans, a inštrumentácia aplikácie.",
+      "kind": "skripta", "lang": [], "words": 473, "updated": "2026-05-05",
+      "headings": ["Observability", "Signals v OpenTelemetry", "Traces a spans", "Metrics", "Logs", "Instrumentation"],
+      "related": ["sxg/docker"]
+    },
+    {
+      "slug": "linux-commands", "file": "Linux Commands Cheat Sheet.md",
+      "title": "Linux — cheat sheet príkazov",
+      "desc": "Najpoužívanejšie príkazy na jednej strane: pohyb v systéme, súbory, práva, procesy, sieť.",
+      "kind": "cheatsheet", "lang": ["bash"], "words": 1074, "updated": "2026-05-05",
+      "headings": ["Pohyb v systéme", "Práca so súbormi", "Práva", "Procesy", "Sieť", "Archívy"],
+      "related": ["sxg/uvod-do-operacnych-systemov", "sxg/fedora-commands"]
+    },
+    {
+      "slug": "fedora-commands", "file": "fedora_commands.md",
+      "title": "Fedora — cheat sheet",
+      "desc": "Fedora-špecifické príkazy: správa balíkov cez dnf, rpm, systémové služby.",
+      "kind": "cheatsheet", "lang": ["bash"], "words": 269, "updated": "2026-05-05",
+      "headings": ["dnf", "rpm", "systemctl", "journalctl"],
+      "related": ["sxg/linux-commands"]
+    },
+    {
+      "slug": "virtualbox", "file": "VirtualBox Guide.md",
+      "title": "VirtualBox — sprievodca",
+      "desc": "Inštalácia, vytvorenie a konfigurácia virtuálneho stroja, sieťové režimy, snapshoty, guest additions.",
+      "kind": "cheatsheet", "lang": [], "words": 1278, "updated": "2026-05-05",
+      "headings": ["Inštalácia", "Nový virtuálny stroj", "Sieťové režimy", "Snapshoty", "Guest Additions"],
+      "related": ["sxg/kvm"]
+    },
+    {
+      "slug": "makefile", "file": "Makefile.md",
+      "title": "Makefile — základy",
+      "desc": "Pravidlá, ciele a premenné; automatizácia prekladu projektu.",
+      "kind": "cheatsheet", "lang": ["bash"], "words": 844, "updated": "2026-05-05",
+      "headings": ["Pravidlá a ciele", "Premenné", "Phony ciele", "Automatické premenné"],
+      "related": ["pro/makefile"]
+    },
+    {
+      "slug": "tips", "file": "tips_and_tricks", "format": "md",
+      "title": "Tipy a triky — SSH a ECDSA",
+      "desc": "ECDSA vs RSA, sila kľúča v bitoch, generovanie a prenos kľúča, ssh-agent, autorizované kľúče pre GitLab a OpenSSH.",
+      "kind": "skripta", "lang": ["bash"], "words": 608, "updated": "2026-05-05",
+      "headings": ["ECDSA", "Security strength", "Výhody ECDSA-521", "ssh-keygen", "ssh-agent", "authorized_keys"],
+      "related": ["sxg/git-github-gitlab"]
+    }
+  ]
+}
