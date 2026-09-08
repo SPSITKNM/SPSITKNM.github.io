@@ -303,6 +303,13 @@
       if (noisy) h.remove();
     });
 
+    // 0b) ak je prvý nadpis totožný s názvom dokumentu, zmaž ho (je už v hlavičke)
+    var firstH = body.querySelector('h1,h2');
+    if (firstH) {
+      var a = slugify(firstH.textContent), b = slugify(doc.title);
+      if (a === b || a.indexOf(b) === 0 || b.indexOf(a) === 0) firstH.remove();
+    }
+
     // 1) nadpisy → id + kotva §, TOC (dedup textu)
     var used = {}, seenText = {}, toc = [];
     body.querySelectorAll('h1,h2,h3').forEach(function (h) {
