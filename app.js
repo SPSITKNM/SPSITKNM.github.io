@@ -42,7 +42,7 @@
   /* ── Emoji preč (display vrstva — zdrojové .md ostávajú kompatibilné s GitHubom) ── */
   // pictografy, emotikony, doprava, doplnkové symboly, vlajky, dingbaty + VS16/ZWJ.
   // Zámerne NEchytá  →  ←  ↗  §  —  ·  ⌘  ©  ™  ani číslice/#.
-  var EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{1F1E6}-\u{1F1FF}\u{FE0F}\u{200D}\u{20E3}]/gu;
+  var EMOJI = /[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{231A}\u{231B}\u{23E9}-\u{23FA}\u{2934}\u{2935}\u{3030}\u{303D}\u{3297}\u{3299}\u{1F1E6}-\u{1F1FF}\u{FE0F}\u{200D}\u{20E3}]/gu;
   function stripEmojiDom(root) {
     if (!root) return;
     var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
