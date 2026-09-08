@@ -305,6 +305,12 @@ h1,h2,h3,h4{font-weight:600;letter-spacing:-.01em;line-height:1.25}
 .prose ul,.prose ol{padding-left:22px;margin:0 0 18px}
 .prose ul>li{list-style:none;position:relative}
 .prose ul>li::before{content:"—";position:absolute;left:-18px;color:var(--ink3)}
+/* GitHub task-list `- [ ]` — čistý zaškrtávací štvorček namiesto disabled inputu */
+.prose li:has(> input[type="checkbox"])::before{display:none}
+.prose li>input[type="checkbox"]{appearance:none;-webkit-appearance:none;flex:none;
+  width:15px;height:15px;border:1px solid var(--line2);border-radius:3px;background:var(--bg3);
+  margin:0 8px 0 -24px;vertical-align:-2px;cursor:default}
+.prose li>input[type="checkbox"]:checked{background:var(--acc);border-color:var(--acc)}
 .prose ol{list-style:decimal;list-style-position:outside}
 .prose ol>li{padding-left:4px}
 .prose a{color:var(--acc);border-bottom:1px solid color-mix(in oklab,var(--acc) 40%,transparent)}
