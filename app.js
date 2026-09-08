@@ -262,7 +262,12 @@
   }
   function runQuery(q) {
     q = (q || '').trim();
-    if (!pal.built || !q) { pal.results = pal.built && !q ? topDocs() : []; pal.idx = 0; renderResults(); return; }
+    if (!pal.built) {
+      var list = document.getElementById('pal-list');
+      if (list) list.innerHTML = '<div class="pal__empty">Načítavam index…</div>';
+      return; // po dostavaní indexu sa dopyt spustí znova (ensureIndex().then)
+    }
+    if (!q) { pal.results = topDocs(); pal.idx = 0; renderResults(); return; }
     var hits = pal.mini.search(q).slice(0, 8);
     pal.results = hits.map(function (h) { return { title: h.title, snippet: h.snippet, file: h.file, subject: h.subject, url: h.url }; });
     pal.idx = 0; renderResults();
@@ -293,7 +298,7 @@
     document.body.style.overflow = 'hidden';
     var input = n.querySelector('input'); input.value = '';
     document.getElementById('pal-list').innerHTML = '<div class="pal__empty">Načítavam index…</div>';
-    ensureIndex().then(function () { runQuery(''); input.focus(); })
+    ensureIndex().then(function () { runQuery(input.value); input.focus(); })
       .catch(function () { document.getElementById('pal-list').innerHTML = '<div class="pal__empty">Index sa nepodarilo načítať. Skús obnoviť stránku.</div>'; });
     input.focus();
     document.addEventListener('keydown', palTrap, true);
