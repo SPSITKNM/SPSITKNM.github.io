@@ -19,17 +19,17 @@
     }
   ],
   "topics": [
-    { "id": "class",      "name": "Triedy a objekty",     "hint": "trieda = predpis, objekt = kus pamäti",     "anchor": "trieda-vs-objekt" },
-    { "id": "encap",      "name": "Enkapsulácia",          "hint": "private/protected, gettery, invariant",     "anchor": "zapuzdrenie" },
-    { "id": "inherit",    "name": "Dedičnosť",             "hint": "is-a, protected, poradie konštruktorov",    "anchor": "dedicnost" },
-    { "id": "virtual",    "name": "Virtual a override",    "hint": "vtable, virtuálny deštruktor",              "anchor": "virtual-override" },
-    { "id": "poly",       "name": "Polymorfizmus",         "hint": "jedno rozhranie, viac chovaní",             "anchor": "polymorfizmus" },
-    { "id": "abstract",   "name": "Abstraktné triedy",     "hint": "pure virtual, nedá sa inštanciovať",        "anchor": "abstraktne-triedy" },
-    { "id": "iface",      "name": "Interfejsy",            "hint": "kontrakt bez implementácie",                "anchor": "interfejsy" },
-    { "id": "bigo",       "name": "Big O",                 "hint": "rast, nie sekundy",                         "anchor": "big-o" },
-    { "id": "memory",     "name": "Pamäťový model",        "hint": "stack vs heap, kto uvoľňuje",               "anchor": "pamatovy-model" },
-    { "id": "types",      "name": "Dátové typy",           "hint": "veľkosť, rozsah, pretečenie",               "anchor": "datove-typy" },
-    { "id": "static",     "name": "Statické členy",        "hint": "patria triede, nie objektu",                "anchor": "staticke-cleny" },
-    { "id": "exceptions", "name": "Výnimky",               "hint": "try/catch, RAII, čo nechytať",              "anchor": "vynimky" }
+    { "id": "class",      "name": "Triedy a objekty",     "hint": "trieda = predpis, objekt = kus pamäti",     "ref": "oop/oop-opakovanie#trieda-vs-objekt" },
+    { "id": "encap",      "name": "Enkapsulácia",          "hint": "private/protected, skrývanie informácií",   "ref": "oop/oop-opakovanie#zapuzdrenie" },
+    { "id": "inherit",    "name": "Dedičnosť",             "hint": "is-a, generalizácia, Liskov",               "ref": "oop/oop-opakovanie#dedicnost-zakladny-princip" },
+    { "id": "virtual",    "name": "Prekrytie a preťaženie", "hint": "override vs overload, zmena správania",     "ref": "oop/oop-opakovanie#prekrytie" },
+    { "id": "poly",       "name": "Polymorfizmus",         "hint": "dynamická väzba, jedno rozhranie",          "ref": "oop/oop-opakovanie#polymorfizmus-a-dynamicka-vazba" },
+    { "id": "design",     "name": "Objektový návrh",       "hint": "stav a správanie, dekompozícia",            "ref": "oop/oop-opakovanie#objektovy-navrh" },
+    { "id": "iface",      "name": "Explicitné rozhranie",  "hint": "kontrakt medzi modulmi",                    "ref": "oop/oop-opakovanie#explicitne-rozhranie" },
+    { "id": "static",     "name": "Trieda bez objektov",   "hint": "statické členy, trieda ako objekt",         "ref": "oop/oop-opakovanie#trieda-bez-objektov" },
+    { "id": "memory",     "name": "Správa pamäte",         "hint": "stack vs heap, garbage collection",         "ref": "oop/oop-opakovanie#sprava-pamate-a-garbage-collection" },
+    { "id": "types",      "name": "Typová kontrola",       "hint": "statická väzba, kontrola typov",            "ref": "oop/oop-opakovanie#staticka-vazba-a-kontrola-typov" },
+    { "id": "bigo",       "name": "Big O",                 "hint": "asymptotická zložitosť — v PRO skriptách",  "ref": "pro/algoritmizacia" },
+    { "id": "exam",       "name": "Rozsah skúšky",         "hint": "čo presne sa pýtam a ako sa hodnotí",       "ref": "pro/komisionalna-skuska" }
   ]
 }

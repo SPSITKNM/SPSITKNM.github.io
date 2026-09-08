@@ -7,6 +7,8 @@
 <meta name="description" content="Skriptá, poznámky a zadania SPSITKNM čitateľné priamo tu — s obsahom, kotvami a kódom.">
 <script>try{var t=localStorage.getItem('teren-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="article">
 <meta property="og:image" content="https://spsitknm.github.io/assets/og-hub.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -15,14 +17,6 @@
 <link rel="stylesheet" href="/ds.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/15.0.7/marked.min.js" defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.2.4/purify.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" data-manual defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-clike.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-cpp.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js" defer></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js" defer></script>
 <script src="/app.js"></script>
 </head>
 <body>
@@ -202,15 +196,59 @@
     document.querySelector('[data-a-body]').innerHTML = '<p class="i2" style="font-family:var(--sans);font-size:14px">' + T.esc(msg) + ' Skús <a class="lnk" href="/">hub</a>.</p>';
   }
 
+  var P = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/';
+  var prismLoading = null;
+  function loadPrism(scope) {
+    if (!prismLoading) {
+      prismLoading = new Promise(function (res) {
+        var s = document.createElement('script');
+        s.src = P + 'prism.min.js'; s.setAttribute('data-manual', '');
+        s.onload = function () {
+          var comps = ['clike', 'c', 'cpp', 'csharp', 'bash', 'docker', 'json'];
+          (function next(i) {
+            if (i >= comps.length) return res();
+            var c = document.createElement('script');
+            c.src = P + 'components/prism-' + comps[i] + '.min.js';
+            c.onload = c.onerror = function () { next(i + 1); };
+            document.head.appendChild(c);
+          })(0);
+        };
+        s.onerror = function () { res(); };
+        document.head.appendChild(s);
+      });
+    }
+    prismLoading.then(function () { try { window.Prism && window.Prism.highlightAllUnder(scope); } catch (e) {} });
+  }
+
   var OK_TAGS = /^(a|abbr|b|blockquote|br|code|del|div|em|h[1-6]|hr|i|img|li|ol|p|pre|s|span|strong|sub|sup|table|tbody|td|th|thead|tr|ul)$/i;
+  var CODEY = /[;{}]\s*$|^\s*(#include|#define|using\s|namespace\s|template\s*<|for\s*\(|while\s*\(|if\s*\(|else\b|return\b|int\s|void\s|bool\s|char\s|long\s|double\s|float\s|auto\s|const\s|struct\s|class\s|public:|private:|protected:|std::|cout\s*<<|cin\s*>>|printf\(|scanf\(|Console\.|System\.|\$\s|sudo\s|docker\s|git\s|dnf\s|apt\s|systemctl\s|virsh\s)/;
+  function looksCodey(l) { return l.trim() !== '' && CODEY.test(l); }
+
   function preClean(md) {
-    // v niektorých .md je C++ kód nezabalený vo fence a `<vector>` / `<iostream>` požerie DOMPurify.
-    // Escapneme uhlové zátvorky mimo fenced code, okrem povolených HTML značiek.
-    return md.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~)/).map(function (chunk, i) {
-      if (i % 2) return chunk; // fenced blok necháme tak
-      return chunk.replace(/<(\/?)([A-Za-z][\w-]*)((?:\s[^<>]*?)?)\s*(\/?)>/g, function (m, sl, tag) {
+    return md.split(/(```[\s\S]*?```|~~~[\s\S]*?~~~|`[^`\n]+`)/).map(function (chunk, i) {
+      if (i % 2) return chunk; // fenced blok / inline kód necháme tak
+      // 1) escape uhlových zátvoriek mimo fence (inak `<vector>` požerie DOMPurify)
+      chunk = chunk.replace(/<(\/?)([A-Za-z][\w-]*)((?:\s[^<>]*?)?)\s*(\/?)>/g, function (m, sl, tag) {
         return OK_TAGS.test(tag) ? m : m.replace(/</g, '&lt;').replace(/>/g, '&gt;');
       });
+      // 2) nezabalený kód → zabaliť do fence (konzervatívne: beh ≥3 riadkov, ≥70 % "kódových")
+      var lines = chunk.split('\n'), out = [], run = [];
+      function flush() {
+        var solid = run.filter(function (l) { return l.trim() !== ''; });
+        var codey = solid.filter(looksCodey).length;
+        if (solid.length >= 3 && codey / solid.length >= 0.7) {
+          out.push('```', run.join('\n').replace(/^\n+|\n+$/g, ''), '```');
+        } else { out.push.apply(out, run); }
+        run = [];
+      }
+      for (var j = 0; j < lines.length; j++) {
+        var l = lines[j];
+        if (/^\s*(#{1,6}\s|[-*+]\s|\d+\.\s|>|\||!\[|\[.*\]\()/.test(l)) { flush(); out.push(l); continue; }
+        if (looksCodey(l) || (run.length && l.trim() === '')) { run.push(l); }
+        else { flush(); out.push(l); }
+      }
+      flush();
+      return out.join('\n');
     }).join('');
   }
 
@@ -221,17 +259,26 @@
     var body = document.querySelector('[data-a-body]');
     body.innerHTML = clean;
 
-    // nadpisy → id + kotva §, TOC
-    var used = {}, toc = [];
+    // 0) upratanie: zmazať prázdne sekcie (nadpis, po ktorom hneď nasleduje nadpis) a duplikáty
+    var hs0 = Array.prototype.slice.call(body.querySelectorAll('h1,h2,h3,h4'));
+    hs0.forEach(function (h) {
+      var n = h.nextElementSibling;
+      var empty = !n || /^H[1-4]$/.test(n.tagName);
+      var noisy = /^#?\s*include\b/i.test(h.textContent.trim()) || !h.textContent.trim() ||
+        /^[^\wáäčďéíĺľňóôŕšťúýž]+$/i.test(h.textContent.trim());
+      if (empty || noisy) h.remove();
+    });
+
+    // 1) nadpisy → id + kotva §, TOC (dedup textu)
+    var used = {}, seenText = {}, toc = [];
     body.querySelectorAll('h1,h2,h3').forEach(function (h) {
       var txt = h.textContent.trim();
-      if (/^#?\s*include\b/i.test(txt) || /^[^\wáäčďéíĺľňóôŕšťúýž]+$/i.test(txt) || !txt) { h.classList.add('nohead'); return; }
       var base = slugify(txt), id = base, k = 2;
       while (used[id]) id = base + '-' + (k++);
       used[id] = 1; h.id = id;
       var lvl = +h.tagName[1];
       var a = document.createElement('a');
-      a.href = '#' + id; a.className = 'anchor'; a.textContent = '§'; a.setAttribute('aria-label', 'Odkaz na sekciu ' + h.textContent);
+      a.href = '#' + id; a.className = 'anchor'; a.textContent = '§'; a.setAttribute('aria-label', 'Odkaz na sekciu ' + txt);
       a.addEventListener('click', function (e) {
         e.preventDefault();
         var link = location.origin + location.pathname + location.search + '#' + id;
@@ -241,19 +288,31 @@
         var live = document.getElementById('teren-live'); if (live) live.textContent = 'Odkaz na sekciu skopírovaný';
       });
       h.insertBefore(a, h.firstChild);
-      toc.push({ id: id, lvl: lvl, text: h.textContent.replace(/^§\s*/, '') });
+      var key = txt.toLowerCase();
+      if (!seenText[key]) { seenText[key] = 1; toc.push({ id: id, lvl: lvl, text: txt }); }
     });
 
-    // TOC render — primárna úroveň = najplytšia s >1 výskytom
+    // 2) TOC — primárna úroveň + zbaliteľné podsekcie
     var counts = { 1: 0, 2: 0, 3: 0 }; toc.forEach(function (t) { counts[t.lvl]++; });
-    // primárna úroveň = tá s najviac položkami (pri veľa H2 nechceme H1-only strom)
     var primary = counts[2] >= 2 && counts[2] >= counts[1] ? 2 : (counts[1] >= 2 ? 1 : (counts[2] >= 2 ? 2 : Math.min.apply(null, toc.map(function (t) { return t.lvl; }).concat([1]))));
+    var subCount = toc.filter(function (t) { return t.lvl > primary; }).length;
     var nav = document.querySelector('[data-toc]');
     document.querySelector('[data-toc-count]').textContent = '· ' + toc.length + ' sekcií';
     nav.innerHTML = toc.map(function (t) {
-      var cls = t.lvl > primary ? 'lv3' : '';
-      return '<a class="' + cls + '" href="#' + t.id + '" data-toc-id="' + t.id + '">' + T.esc(t.text) + '</a>';
+      var deep = t.lvl > primary;
+      return '<a class="' + (deep ? 'lv3' : '') + '" href="#' + t.id + '" data-toc-id="' + t.id + '"' + (deep ? ' data-sub hidden' : '') + '>' + T.esc(t.text) + '</a>';
     }).join('');
+    if (subCount) {
+      var tgl = document.createElement('button');
+      tgl.type = 'button'; tgl.className = 'toc__sub-tgl';
+      tgl.textContent = '+ podsekcie (' + subCount + ')';
+      tgl.addEventListener('click', function () {
+        var on = nav.classList.toggle('subs');
+        nav.querySelectorAll('[data-sub]').forEach(function (a) { a.hidden = !on; });
+        tgl.textContent = (on ? '– skryť podsekcie' : '+ podsekcie (' + subCount + ')');
+      });
+      nav.parentNode.insertBefore(tgl, nav.nextSibling);
+    }
     nav.addEventListener('click', function (e) {
       var a = e.target.closest('a'); if (!a) return;
       var t = document.querySelector('.toc[data-drawer]'); if (t && innerWidth <= 1040) t.classList.remove('open');
@@ -264,11 +323,13 @@
     if (tops.length >= 3) {
       document.querySelector('[data-toc-fig]').hidden = false;
       document.querySelector('[data-toc-contour]').innerHTML =
-        T.contourSVG(Math.min(tops.length, 12), 0, 180, 60).replace('class="contours"', 'style="width:100%;height:auto;display:block"');
+        T.contourSVG(Math.min(tops.length, 12), 0, 180, 60);
     }
 
-    // kódové bloky → hlavička + kopírovanie + Prism
+    // kódové bloky → hlavička + kopírovanie
+    var hasCode = false;
     body.querySelectorAll('pre').forEach(function (pre) {
+      hasCode = true;
       var code = pre.querySelector('code');
       var m = code && (code.className || '').match(/language-([\w-]+)/);
       var lang = m ? m[1] : '';
@@ -279,7 +340,7 @@
       pre.parentNode.insertBefore(wrap, pre);
       wrap.appendChild(hd); wrap.appendChild(pre);
     });
-    if (window.Prism) { try { window.Prism.highlightAllUnder(body); } catch (e) {} }
+    if (hasCode) loadPrism(body);
 
     // GitHub-style callouts z blockquote
     body.querySelectorAll('blockquote').forEach(function (bq) {

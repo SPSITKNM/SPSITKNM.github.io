@@ -132,6 +132,8 @@
       .then(function (md) {
         var body = el.querySelector('[data-news-body]') || el;
         body.innerHTML = window.DOMPurify.sanitize(window.marked.parse(md));
+        var first = body.firstElementChild;
+        if (first && /^H[1-3]$/.test(first.tagName)) first.remove(); // blok má vlastný štítok
         el.hidden = false;
         var st = el.querySelector('[data-news-stamp]');
         if (st) st.textContent = file;
@@ -259,6 +261,15 @@
     else if (e.key === 'Enter') { e.preventDefault(); var r = pal.results[pal.idx]; if (r) location.href = r.url; }
     else if (e.key === 'Escape') { e.preventDefault(); closePalette(); }
   }
+  function palTrap(e) {
+    if (e.key !== 'Tab') return;
+    var n = document.getElementById('teren-palette'); if (!n || n.hidden) return;
+    var f = n.querySelectorAll('input,button,a[href]');
+    if (!f.length) return;
+    var first = f[0], last = f[f.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
   function openPalette() {
     pal.opener = document.activeElement;
     var n = palNode(); n.hidden = false; pal.open = true;
@@ -268,10 +279,12 @@
     ensureIndex().then(function () { runQuery(''); input.focus(); })
       .catch(function () { document.getElementById('pal-list').innerHTML = '<div class="pal__empty">Index sa nepodarilo načítať. Skús obnoviť stránku.</div>'; });
     input.focus();
+    document.addEventListener('keydown', palTrap, true);
   }
   function closePalette() {
     var n = document.getElementById('teren-palette'); if (n) n.hidden = true;
     pal.open = false; document.body.style.overflow = '';
+    document.removeEventListener('keydown', palTrap, true);
     if (pal.opener && pal.opener.focus) pal.opener.focus();
   }
 
@@ -360,7 +373,8 @@
     document.querySelectorAll('[data-theme-toggle]').forEach(function (b) { b.addEventListener('click', cycleTheme); });
     document.querySelectorAll('[data-open-palette]').forEach(function (b) { b.addEventListener('click', openPalette); });
     document.querySelectorAll('[data-toc-toggle]').forEach(function (b) {
-      b.addEventListener('click', function () {
+      b.addEventListener('click', function (e) {
+        e.preventDefault();
         var t = document.querySelector('.toc[data-drawer]'); if (t) t.classList.toggle('open');
       });
     });

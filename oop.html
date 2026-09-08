@@ -7,6 +7,8 @@
 <meta name="description" content="Checklist dvanástich tém pred komisionálnou skúškou z programovania — s vlastným progresom uloženým v prehliadači.">
 <script>try{var t=localStorage.getItem('teren-theme');if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)}catch(e){}</script>
 <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="alternate icon" href="/favicon-32.png" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta property="og:type" content="website">
 <meta property="og:image" content="https://spsitknm.github.io/assets/og-oop.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -85,14 +87,19 @@
 (function boot() {
   if (!window.TEREN) { return setTimeout(boot, 20); }
   var T = window.TEREN;
+  function refUrl(ref) {
+    var s = ref.split('/')[0], rest = ref.split('/').slice(1).join('/');
+    var slug = rest.split('#')[0], hash = rest.indexOf('#') >= 0 ? '#' + rest.split('#')[1] : '';
+    return '/citacka.html?s=' + s + '&doc=' + slug + hash;
+  }
   fetch('/content/oop.json').then(function (r) { return r.json(); }).then(function (set) {
     var box = document.getElementById('checklist');
     box.innerHTML = (set.topics || []).map(function (t) {
-      return '<button type="button" class="check" data-id="' + t.id + '" aria-pressed="false" ' +
-        'onclick="if(event.altKey)location.href=this.dataset.href" data-href="/citacka.html?s=oop&doc=oop-opakovanie#' + t.anchor + '">' +
+      var url = refUrl(t.ref || 'oop/oop-opakovanie');
+      return '<button type="button" class="check" data-id="' + t.id + '" aria-pressed="false">' +
         '<span class="box" aria-hidden="true">✓</span>' +
         '<span style="min-width:0"><span class="nm">' + T.esc(t.name) + '</span>' +
-        '<span class="hi">' + T.esc(t.hint) + ' · <a class="lnk" href="/citacka.html?s=oop&doc=oop-opakovanie#' + t.anchor + '" onclick="event.stopPropagation()">otvoriť sekciu</a></span></span>' +
+        '<span class="hi">' + T.esc(t.hint) + ' · <a class="lnk" href="' + url + '" onclick="event.stopPropagation()">otvoriť</a></span></span>' +
         '</button>';
     }).join('');
     T.initChecklist();
