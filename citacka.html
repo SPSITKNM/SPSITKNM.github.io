@@ -294,14 +294,13 @@
     body.innerHTML = clean;
     T.stripEmojiDom(body);
 
-    // 0) upratanie: zmazať prázdne sekcie (nadpis, po ktorom hneď nasleduje nadpis) a duplikáty
-    var hs0 = Array.prototype.slice.call(body.querySelectorAll('h1,h2,h3,h4'));
-    hs0.forEach(function (h) {
-      var n = h.nextElementSibling;
-      var empty = !n || /^H[1-4]$/.test(n.tagName);
-      var noisy = /^#?\s*include\b/i.test(h.textContent.trim()) || !h.textContent.trim() ||
-        /^[^\wáäčďéíĺľňóôŕšťúýž]+$/i.test(h.textContent.trim());
-      if (empty || noisy) h.remove();
+    // 0) upratanie: zmazať len šumové nadpisy (#include, samá interpunkcia, prázdne)
+    //    — reálne nadpisy necháme aj keď po nich hneď nasleduje podnadpis (to je bežná štruktúra
+    //    a inak by prišli o kotvu, na ktorú môže smerovať odkaz)
+    Array.prototype.slice.call(body.querySelectorAll('h1,h2,h3,h4')).forEach(function (h) {
+      var t = h.textContent.trim();
+      var noisy = /^#?\s*include\b/i.test(t) || !t || /^[^\wáäčďéíĺľňóôŕšťúýž]+$/i.test(t);
+      if (noisy) h.remove();
     });
 
     // 1) nadpisy → id + kotva §, TOC (dedup textu)
@@ -421,8 +420,24 @@
         setTimeout(function () { chip.remove(); }, 6000);
       });
     } else if (location.hash) {
-      var el = document.getElementById(location.hash.slice(1)); if (el) el.scrollIntoView();
+      var want = decodeURIComponent(location.hash.slice(1));
+      var el = document.getElementById(want) || fuzzyHeading(want);
+      if (el) requestAnimationFrame(function () { el.scrollIntoView(); el.style.scrollMarginTop = '64px'; });
     }
+  }
+
+  function fuzzyHeading(want) {
+    var hs = Array.prototype.slice.call(document.querySelectorAll('.prose h1[id],.prose h2[id],.prose h3[id]'));
+    // presná zhoda tokenu / obsahuje / podobnosť
+    var best = null, bestScore = 0, wt = want.split('-').filter(Boolean);
+    hs.forEach(function (h) {
+      var id = h.id, it = id.split('-').filter(Boolean);
+      var common = wt.filter(function (w) { return it.indexOf(w) >= 0; }).length;
+      var score = common / Math.max(wt.length, it.length);
+      if (id.indexOf(want) >= 0 || want.indexOf(id) >= 0) score += 0.5;
+      if (score > bestScore) { bestScore = score; best = h; }
+    });
+    return bestScore >= 0.34 ? best : null;
   }
 })();
 </script>
