@@ -66,10 +66,10 @@
       "slug": "uvod-do-si",
       "file": "uvod_do_si.md",
       "title": "Úvod do softvérového inžinierstva — modelovanie správania",
-      "desc": "Modelovanie správania: diagram aktivít (notácia + príklad), BPMN procesný pohľad (typy taskov, brány, lanes) a práca softvérového analytika.",
+      "desc": "Modelovanie správania: diagram aktivít, BPMN procesný pohľad (typy taskov, brány), wireframe/mockup a práca softvérového analytika.",
       "kind": "skripta",
       "lang": [],
-      "words": 1000,
+      "words": 1200,
       "updated": "2026-09-10",
       "headings": [
         "Diagram aktivít",
@@ -80,7 +80,8 @@
         "Úlohy (tasks) a ich typy",
         "Brány (gateways)",
         "Toky a účastníci",
-        "Diagram aktivít vs BPMN"
+        "Diagram aktivít vs BPMN",
+        "Wireframe a mockup"
       ],
       "related": [
         "oop/oop-opakovanie",
