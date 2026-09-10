@@ -60,6 +60,28 @@
           "title": "Abstraktné triedy a metódy"
         }
       ]
+    },
+    {
+      "slug": "uvod-do-si",
+      "file": "uvod_do_si.md",
+      "title": "Úvod do softvérového inžinierstva — modelovanie správania",
+      "desc": "Diagram aktivít: notácia a príklad (prihlásenie) ako diagram + ASCII náčrt. BPMN v skratke a porovnanie s activity diagramom.",
+      "kind": "skripta",
+      "lang": [],
+      "words": 650,
+      "updated": "2026-09-10",
+      "headings": [
+        "Diagram aktivít",
+        "Notácia",
+        "Príklad — prihlásenie používateľa",
+        "BPMN v skratke",
+        "Diagram aktivít vs BPMN"
+      ],
+      "related": [
+        "oop/oop-opakovanie",
+        "pro/systemova-analyza"
+      ],
+      "video": []
     }
   ],
   "topics": [
