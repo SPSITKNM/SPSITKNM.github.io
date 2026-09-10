@@ -317,7 +317,7 @@
       "kind": "sablona",
       "lang": [],
       "words": 1317,
-      "updated": "2026-05-05",
+      "updated": "2026-09-10",
       "headings": [
         "Zoznam kapitol",
         "Dôvod zavedenia riešenia",
@@ -327,7 +327,11 @@
         "Hranice systému",
         "Charakteristika aktérov",
         "Use Case diagram",
-        "Triedny diagram"
+        "Sekvenčný diagram",
+        "Triedny diagram",
+        "Aktivitný diagram (bonus)",
+        "BPMN diagram (bonus)",
+        "Wireframe kľúčových obrazoviek (bonus)"
       ],
       "related": [
         "pro/projekty"
